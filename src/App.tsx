@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Reactds
-          </a>
+      <div className="window">
+        <header className="toolbar toolbar-header">
+          <h1 className="title">Header</h1>
         </header>
+        <div className="window-content">
+          <div className="pane-group">
+            <div className="pane-sm sidebar">...</div>
+            <div className="pane">...</div>
+          </div>
+        </div>
+        <footer className="toolbar toolbar-footer">
+          <h1 className="title">Footer</h1>
+        </footer>
       </div>
     );
   }
