@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/photon.css';
+import './css/other.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

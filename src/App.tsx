@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import LoginScreen from './features/Auth';
+
 class App extends Component {
   render() {
     return (
@@ -8,14 +10,8 @@ class App extends Component {
           <h1 className="title">Header</h1>
         </header>
         <div className="window-content">
-          <div className="pane-group">
-            <div className="pane-sm sidebar">...</div>
-            <div className="pane">...</div>
-          </div>
+          <LoginScreen />
         </div>
-        <footer className="toolbar toolbar-footer">
-          <h1 className="title">Footer</h1>
-        </footer>
       </div>
     );
   }
