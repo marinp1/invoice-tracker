@@ -7,6 +7,7 @@ import {
   DialogContainer,
   ButtonGroup,
   FormContainer,
+  ForgotPasswordDiv,
 } from './styled';
 
 interface State {
@@ -69,6 +70,10 @@ class LoginScreen extends React.Component<{}, State> {
                 />
               </div>
             </form>
+            <CustomButton theme="primary">LOG IN</CustomButton>
+            <ForgotPasswordDiv>
+              <a>Retrieve forgotted password</a>
+            </ForgotPasswordDiv>
           </FormContainer>
         </DialogContainer>
       </Container>
