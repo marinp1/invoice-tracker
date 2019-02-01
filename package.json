@@ -12,7 +12,8 @@
 		"prop-types": "^15.6.2",
 		"react": "^16.7.0",
 		"react-dev-utils": "^5.0.1",
-		"react-dom": "^16.7.0"
+		"react-dom": "^16.7.0",
+		"react-pose": "^4.0.6"
 	},
 	"scripts": {
 		"dev": "yarn react-scripts start",

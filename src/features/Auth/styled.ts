@@ -11,27 +11,22 @@ export const Container = glamorous.div({
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: COLORS.MAIN_BLACK,
-});
-
-export const DialogContainer = glamorous.div({
-  position: 'relative',
-  padding: '2rem',
-  borderRadius: '0.2rem',
-  /*
-  borderTop: `0.2rem solid ${COLORS.MAIN_RED}`,
-  borderBottom: `0.2rem solid ${COLORS.MAIN_RED}`,
-  */
-  width: '70%',
-  boxShadow: '0px 5px 15px 1px rgba(0,0,0,0.25)',
-  background: COLORS.ACCENT_WHITE,
-  color: COLORS.PURE_BLACK,
-  display: 'flex',
-  flexDirection: 'column',
-  '& h1': {
-    fontWeight: 200,
-    letterSpacing: '0.2rem',
-    alignSelf: 'center',
-    marginBottom: '2rem',
+  '& .dialogContainer': {
+    position: 'relative',
+    padding: '2rem',
+    borderRadius: '0.2rem',
+    width: '70%',
+    boxShadow: '0px 5px 15px 1px rgba(0,0,0,0.25)',
+    background: COLORS.ACCENT_WHITE,
+    color: COLORS.PURE_BLACK,
+    display: 'flex',
+    flexDirection: 'column',
+    '& h1': {
+      fontWeight: 200,
+      letterSpacing: '0.2rem',
+      alignSelf: 'center',
+      marginBottom: '2rem',
+    },
   },
 });
 
@@ -69,6 +64,15 @@ export const FormContainer = glamorous.div({
   borderTop: 0,
   borderRadius: '0 0 0.5rem 0.5rem',
   padding: '1rem',
+  '& #login-button': {
+    width: '100%',
+    borderRadius: '0.2rem',
+  },
+  '& #signup-button': {
+    marginTop: '0.5rem',
+    width: '100%',
+    borderRadius: '0.2rem',
+  },
 });
 
 export const ForgotPasswordDiv = glamorous.div({

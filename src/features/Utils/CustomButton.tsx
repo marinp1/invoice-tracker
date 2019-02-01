@@ -40,6 +40,7 @@ const Container = glamorous.button(
 
 interface Props {
   theme?: 'default' | 'primary';
+  id?: string;
   type?: string;
   className?: string;
   children: React.ReactNode;
@@ -52,6 +53,7 @@ class CustomButton extends React.Component<Props> {
     return (
       <ThemeProvider theme={buttonThemes[this.props.theme || 'default']}>
         <Container
+          id={this.props.id}
           disabled={this.props.disabled}
           className={this.props.className || ''}
           type={this.props.type}
