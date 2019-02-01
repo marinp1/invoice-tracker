@@ -10,13 +10,11 @@ import LoginScreen from './features/Auth';
 class App extends Component {
   render() {
     return (
-      <Authenticator hideDefault={true} amplifyConfig={awsConfig}>
-        <div className="window">
-          <div className="window-content">
-            <LoginScreen />
-          </div>
+      <div className="window">
+        <div className="window-content">
+          <LoginScreen />
         </div>
-      </Authenticator>
+      </div>
     );
   }
 }
