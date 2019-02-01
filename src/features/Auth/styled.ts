@@ -73,6 +73,11 @@ export const FormContainer = glamorous.div({
     width: '100%',
     borderRadius: '0.2rem',
   },
+  '& #verify-button': {
+    marginTop: '0.5rem',
+    width: '100%',
+    borderRadius: '0.2rem',
+  },
 });
 
 export const ForgotPasswordDiv = glamorous.div({
