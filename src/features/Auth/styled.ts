@@ -23,8 +23,8 @@ export const Container = glamorous.div({
     flexDirection: 'column',
     '& h1': {
       fontWeight: 200,
+      textAlign: 'center',
       letterSpacing: '0.2rem',
-      alignSelf: 'center',
       marginBottom: '2rem',
     },
   },

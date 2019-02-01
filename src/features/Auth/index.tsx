@@ -1,10 +1,15 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
 
 import CustomButton from '../Utils/CustomButton';
 
 import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
+
+import LoadingScreen from '../Utils/LoadingScreen';
+
+import AppState from '../../types/state';
 
 import { Container, ButtonGroup, FormContainer } from './styled';
 
@@ -25,12 +30,17 @@ const Modal = posed.div({
   },
 });
 
+interface Props {
+  authState: 'SignUp' | 'Verify' | 'SignIn' | 'Welcome';
+  apiCallInProgress: boolean;
+}
+
 interface State {
   currentView: 'login' | 'signup';
   isVisible: boolean;
 }
 
-class LoginScreen extends React.Component<{}, State> {
+class LoginScreen extends React.Component<Props, State> {
   state: State = {
     currentView: 'login',
     isVisible: false,
@@ -49,12 +59,32 @@ class LoginScreen extends React.Component<{}, State> {
     });
   };
 
+  mapStateToText = () => {
+    switch (this.props.authState) {
+      case 'SignIn': {
+        return 'Signing in...';
+      }
+      case 'SignUp': {
+        return 'Creating account...';
+      }
+      case 'Verify': {
+        return 'Verifying...';
+      }
+      case 'Welcome': {
+        return 'Loading...';
+      }
+    }
+  };
+
   render() {
     return (
       <Container>
         <PoseGroup>
           {this.state.isVisible && (
             <Modal key="dialog" className="dialogContainer">
+              {this.props.apiCallInProgress && (
+                <LoadingScreen text={this.mapStateToText()} />
+              )}
               <h1>INVOICE TRACKER</h1>
               <ButtonGroup>
                 <CustomButton
@@ -95,4 +125,12 @@ class LoginScreen extends React.Component<{}, State> {
   }
 }
 
-export default LoginScreen;
+const mapStateToProps = (state: AppState): Props => ({
+  apiCallInProgress: state.auth.apiCallInProgress,
+  authState: state.auth.authState,
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(LoginScreen);
