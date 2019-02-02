@@ -30,10 +30,15 @@ const Modal = posed.div({
   },
 });
 
-interface Props {
-  authState: 'SignUp' | 'Verify' | 'SignIn' | 'Welcome';
+interface OwnProps {
+  authState: 'SignUp' | 'Verify' | 'SignIn';
+}
+
+interface ReduxStateProps {
   apiCallInProgress: boolean;
 }
+
+type Props = OwnProps & ReduxStateProps;
 
 interface State {
   currentView: 'login' | 'signup';
@@ -69,9 +74,6 @@ class LoginScreen extends React.Component<Props, State> {
       }
       case 'Verify': {
         return 'Verifying...';
-      }
-      case 'Welcome': {
-        return 'Loading...';
       }
     }
   };
@@ -125,9 +127,8 @@ class LoginScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: AppState): Props => ({
+const mapStateToProps = (state: AppState): ReduxStateProps => ({
   apiCallInProgress: state.auth.apiCallInProgress,
-  authState: state.auth.authState,
 });
 
 export default connect(
