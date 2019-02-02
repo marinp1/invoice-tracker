@@ -1,6 +1,8 @@
+import { AuthStateType } from './index';
+
 export interface AuthState {
   apiCallInProgress: boolean;
-  authState: 'SignUp' | 'Verify' | 'SignIn' | 'Welcome';
+  authState: AuthStateType;
   currentUser: any; // FIXME: User type?
 }
 

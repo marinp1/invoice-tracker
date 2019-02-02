@@ -32,6 +32,11 @@ function appReducer(
         ...state,
         currentUser: null,
       };
+    case 'CHANGE_AUTH_STATE':
+      return {
+        ...state,
+        authState: action.authState,
+      };
     default:
       return state;
   }

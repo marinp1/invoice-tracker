@@ -116,7 +116,7 @@ class LoginScreen extends React.Component<Props, State> {
                 {this.state.currentView === 'login' ? (
                   <LoginForm />
                 ) : (
-                  <RegistrationForm />
+                  <RegistrationForm authState={this.props.authState} />
                 )}
               </FormContainer>
             </Modal>

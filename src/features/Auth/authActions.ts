@@ -3,6 +3,7 @@ import { AnyAction } from 'redux';
 import { Auth } from 'aws-amplify';
 
 import AppState from '../../types/state';
+import { AuthStateType } from '../../types';
 
 export interface LoginSuccess {
   type: 'LOGIN_SUCCESS';
@@ -29,13 +30,19 @@ export interface EndAuthApiCall {
   type: 'END_AUTH_API_CALL';
 }
 
+export interface ChangeAuthState {
+  type: 'CHANGE_AUTH_STATE';
+  authState: AuthStateType;
+}
+
 export type AuthAction =
   | LoginSuccess
   | LoginFailure
   | SignUpSuccess
   | SignUpFailure
   | StartAuthApiCall
-  | EndAuthApiCall;
+  | EndAuthApiCall
+  | ChangeAuthState;
 
 type AuthThunkResult<R> = ThunkAction<R, AppState, undefined, AuthAction>;
 
@@ -105,4 +112,13 @@ export const signUp = (
       type: 'END_AUTH_API_CALL',
     });
   }
+};
+
+export const changeAuthState = (
+  authState: AuthStateType
+): AuthThunkResult<void> => (dispatch, getState) => {
+  dispatch({
+    type: 'CHANGE_AUTH_STATE',
+    authState,
+  });
 };

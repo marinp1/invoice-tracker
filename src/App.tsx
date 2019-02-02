@@ -7,9 +7,10 @@ Amplify.configure(awsConfig);
 
 import LoginScreen from './features/Auth';
 import AppState from './types/state';
+import { AuthStateType } from './types';
 
 interface Props {
-  authState: 'SignUp' | 'Verify' | 'SignIn' | 'Welcome';
+  authState: AuthStateType;
 }
 
 class App extends React.Component<Props> {
