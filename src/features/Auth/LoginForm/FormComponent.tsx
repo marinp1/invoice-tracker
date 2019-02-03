@@ -6,7 +6,7 @@ import CustomButton from '../../Utils/CustomButton';
 export interface CustomProps {}
 
 export interface LoginFormData {
-  emailAddress: string;
+  username: string;
   password: string;
   rememberMe: boolean;
 }
@@ -18,12 +18,12 @@ const FormComponent: React.SFC<Props> = (props: Props) => {
     <React.Fragment>
       <form onSubmit={props.handleSubmit}>
         <div className="form-group">
-          <label htmlFor="emailAddress">Email address</label>
+          <label htmlFor="username">Username</label>
           <Field
-            name="emailAddress"
+            name="username"
             component="input"
-            type="email"
-            placeholder="Email"
+            type="text"
+            placeholder="Username"
             className="form-control"
           />
         </div>

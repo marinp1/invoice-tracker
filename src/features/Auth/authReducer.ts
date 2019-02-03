@@ -22,10 +22,17 @@ function appReducer(
         ...state,
         apiCallInProgress: false,
       };
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        authState: 'Welcome',
+        currentUser: action.user,
+      };
     case 'SIGN_UP_SUCCESS':
       return {
         ...state,
         authState: 'Verify',
+        currentUser: action.user,
       };
     case 'SIGN_UP_FAILURE':
       return {

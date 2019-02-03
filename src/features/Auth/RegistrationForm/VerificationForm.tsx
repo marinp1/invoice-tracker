@@ -5,7 +5,7 @@ import CustomButton from '../../Utils/CustomButton';
 
 import { connect } from 'react-redux';
 import { ConfigProps } from 'redux-form';
-import { AuthThunkDispatch } from '../authActions';
+import { AuthThunkDispatch, verifyAccount } from '../authActions';
 
 import AppState from '../../../types/state';
 import { AuthStateType } from '../../../types';
@@ -15,6 +15,7 @@ interface CustomProps {
 }
 
 interface VerificationFormData {
+  username: string;
   verificationCode: string;
 }
 
@@ -32,6 +33,16 @@ const FormComponent: React.SFC<Props> = (props: Props) => {
   return (
     <React.Fragment>
       <form onSubmit={props.handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <Field
+            name="username"
+            component="input"
+            type="text"
+            placeholder="Username"
+            className="form-control"
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="verificationCode">Verification code</label>
           <Field
@@ -72,9 +83,7 @@ function mapDispatchToProps(dispatch: AuthThunkDispatch): DispatchProps {
       dispatch: AuthThunkDispatch,
       props: CustomProps
     ) => {
-      /*
-      dispatch(signUp(formData));
-      */
+      dispatch(verifyAccount(formData));
       console.log(formData);
     },
   };

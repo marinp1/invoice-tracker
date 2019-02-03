@@ -1,9 +1,12 @@
+import { SignUpSuccess } from './authActions';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import { toast } from 'react-toastify';
 import { Auth } from 'aws-amplify';
 
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
+
+import { v1 as uuidv1 } from 'uuid';
 
 export interface LoginSuccess {
   type: 'LOGIN_SUCCESS';
@@ -16,6 +19,7 @@ export interface LoginFailure {
 
 export interface SignUpSuccess {
   type: 'SIGN_UP_SUCCESS';
+  user: any;
 }
 
 export interface SignUpFailure {
@@ -49,7 +53,7 @@ type AuthThunkResult<R> = ThunkAction<R, AppState, undefined, AuthAction>;
 export type AuthThunkDispatch = ThunkDispatch<AppState, undefined, AuthAction>;
 
 type LoginContent = {
-  emailAddress: string;
+  username: string;
   password: string;
   rememberMe: boolean;
 };
@@ -64,19 +68,16 @@ export const login = (data: LoginContent): AuthThunkResult<void> => async (
     });
 
     try {
-      const user = await Auth.signIn({
-        username: data.emailAddress,
+      const result = await Auth.signIn({
+        username: data.username,
         password: data.password,
       });
-      /*
       dispatch({
         type: 'LOGIN_SUCCESS',
-        user,
+        user: result.user,
       });
-      */
-      console.log(user);
     } catch (e) {
-      console.log(e);
+      toast.error(e.message);
     }
 
     dispatch({
@@ -85,9 +86,53 @@ export const login = (data: LoginContent): AuthThunkResult<void> => async (
   }
 };
 
-export const signUp = (
-  email: string,
-  password: string
+type SignUpContent = {
+  firstName: string;
+  username: string;
+  emailAddress: string;
+  password: string;
+};
+
+export const signUp = (data: SignUpContent): AuthThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  if (!getState().auth.apiCallInProgress) {
+    dispatch({
+      type: 'START_AUTH_API_CALL',
+    });
+    try {
+      const result = await Auth.signUp({
+        username: data.username,
+        password: data.password,
+        attributes: {
+          given_name: data.firstName,
+          email: data.emailAddress,
+        },
+        validationData: [],
+      });
+      dispatch({
+        type: 'SIGN_UP_SUCCESS',
+        user: result.user,
+      });
+      toast.success('Sign up successful! Pleast verify your account.');
+    } catch (e) {
+      toast.error(e.message);
+    }
+
+    dispatch({
+      type: 'END_AUTH_API_CALL',
+    });
+  }
+};
+
+type VerificationContent = {
+  username: string;
+  verificationCode: string;
+};
+
+export const verifyAccount = (
+  data: VerificationContent
 ): AuthThunkResult<void> => async (dispatch, getState) => {
   if (!getState().auth.apiCallInProgress) {
     dispatch({
@@ -95,17 +140,13 @@ export const signUp = (
     });
 
     try {
-      const data = Auth.signUp({
-        username: email,
-        password,
-        attributes: {
-          email,
-        },
-        validationData: [],
+      await Auth.confirmSignUp(data.username, data.verificationCode, {
+        forceAliasCreation: true,
       });
-      console.log(data);
+      changeAuthState('SignIn')(dispatch, getState, undefined);
+      toast.success('Verification successful!');
     } catch (e) {
-      console.log(e);
+      toast.error(e.message);
     }
 
     dispatch({
