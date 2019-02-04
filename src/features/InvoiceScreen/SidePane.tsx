@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import * as glamor from 'glamor';
 
 import { COLORS } from '../../styles';
-import {
-  DueDateCategory,
-  mapDueDateCategoryToColor,
-} from '../../types/invoice';
+import { mapDueDateCategoryToColor } from '../../utils';
+import { DueDateCategory } from '../../types/invoice';
 import { PhotonIcon } from '../../types';
 import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
 import AppState from '../../types/state';

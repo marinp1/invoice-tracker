@@ -20,6 +20,11 @@ const buttonThemes = {
     color: COLORS.PURE_WHITE,
     border: `0.1rem solid ${COLORS.MAIN_BLUE}`,
   },
+  success: {
+    background: COLORS.GREEN,
+    color: COLORS.PURE_WHITE,
+    border: `0.1rem solid #03c34d`,
+  },
 };
 
 const Container = glamorous.button(
@@ -39,7 +44,7 @@ const Container = glamorous.button(
 );
 
 interface Props {
-  theme?: 'default' | 'primary';
+  theme?: 'default' | 'primary' | 'success';
   id?: string;
   type?: string;
   className?: string;

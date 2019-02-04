@@ -16,10 +16,21 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
     return (
       <div className="pane-group">
         <SidePane />
-        <div className="pane">
+        <div
+          className="pane"
+          style={{
+            boxShadow: '10px 0px 7px -1px rgba(0,0,0,0.03)',
+            zIndex: 90,
+          }}
+        >
           <ListView />
         </div>
-        <div className="pane" style={{ background: COLORS.MAIN_BLACK }}>
+        <div
+          className="pane"
+          style={{
+            background: COLORS.MAIN_BLACK,
+          }}
+        >
           <InvoiceView />
         </div>
       </div>

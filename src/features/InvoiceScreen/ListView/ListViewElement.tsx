@@ -6,12 +6,8 @@ import * as glamor from 'glamor';
 import moment from 'moment';
 
 import { COLORS } from '../../../styles';
-
-import {
-  Invoice,
-  categoryToIcon,
-  mapDueDateCategoryToColor,
-} from '../../../types/invoice';
+import { categoryToIcon } from '../../../utils';
+import { Invoice } from '../../../types/invoice';
 
 const largeIconCss = glamor.css({
   fontSize: '36px',

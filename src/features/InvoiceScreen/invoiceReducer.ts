@@ -48,7 +48,11 @@ function appReducer(
         openInvoices: state.openInvoices.filter(
           inv => inv.id !== action.invoiceId
         ),
-        selectedInvoiceId: null,
+        selectedInvoiceId: state.openInvoices.filter(
+          inv => inv.id !== action.invoiceId
+        )[0]
+          ? state.openInvoices.filter(inv => inv.id !== action.invoiceId)[0].id
+          : null,
       };
     default:
       return state;
