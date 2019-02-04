@@ -68,6 +68,7 @@
 		"appId": "fi.patrikmarin",
 		"compression": "normal",
 		"productName": "Invoice Tracker",
+		"files": ["*/**", "dist/icons"],
 		"directories": {
 			"buildResources": "build",
 			"output": "dist"

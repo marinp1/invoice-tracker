@@ -4,8 +4,10 @@ const {
   shell,
   ipcMain,
   Menu,
-  TouchBar
+  TouchBar,
+  Tray,
 } = require('electron');
+
 const {
   TouchBarButton,
   TouchBarLabel,
@@ -16,8 +18,9 @@ const path = require('path');
 const isDev = require('electron-is-dev');
 
 let mainWindow;
+let tray;
 
-createWindow = () => {
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     backgroundColor: '#F7F7F7',
     minWidth: 880,
@@ -29,6 +32,7 @@ createWindow = () => {
     },
     height: 860,
     width: 1280,
+    icon: path.join(__dirname, 'assets/icons/main/logo.png'),
   });
 
   mainWindow.loadURL(
@@ -70,7 +74,7 @@ createWindow = () => {
   });
 };
 
-generateMenu = () => {
+const generateMenu = () => {
   const template = [{
       label: 'File',
       submenu: [{
@@ -174,9 +178,34 @@ generateMenu = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 };
 
+const generateTray = () => {
+  tray = new Tray(path.join(__dirname, 'assets/icons/menu/logo_bar.png'));
+  const contextMenu = Menu.buildFromTemplate([{
+      label: 'Item1',
+      type: 'radio'
+    },
+    {
+      label: 'Item2',
+      type: 'radio'
+    },
+    {
+      label: 'Item3',
+      type: 'radio',
+      checked: true
+    },
+    {
+      label: 'Item4',
+      type: 'radio'
+    }
+  ])
+  tray.setToolTip('This is my application.')
+  tray.setContextMenu(contextMenu)
+}
+
 app.on('ready', () => {
   createWindow();
   generateMenu();
+  generateTray();
 });
 
 app.on('window-all-closed', () => {
