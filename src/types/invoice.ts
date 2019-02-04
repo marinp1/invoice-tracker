@@ -52,13 +52,13 @@ export const mapDueDateCategoryToColor = (dueDateCategory: DueDateCategory) => {
     case DueDateCategory.TODAY:
       return COLORS.MAIN_RED;
     case DueDateCategory.NEXT_5_DAYS:
-      return '#fdbc40';
+      return COLORS.YELLOW;
     case DueDateCategory.NEXT_20_DAYS:
       return COLORS.MAIN_BLUE;
     case DueDateCategory.LATER:
       return COLORS.DARK_BLUE;
     case DueDateCategory.PAID:
-      return '#00D050';
+      return COLORS.GREEN;
   }
 };
 
@@ -70,3 +70,8 @@ export interface Invoice {
   dueDate: string;
   paid: boolean;
 }
+
+export type OpenInvoice = Invoice & {
+  unsavedChanges: boolean;
+  name: string;
+};

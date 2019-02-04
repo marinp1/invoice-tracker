@@ -3,27 +3,15 @@ import { connect } from 'react-redux';
 
 import SidePane from './SidePane';
 import ListView from './ListView';
+import InvoiceView from './InvoiceView';
 
-import { InvoiceThunkDispatch, createInvoice } from './invoiceActions';
+import { InvoiceThunkDispatch } from './invoiceActions';
 
 import { COLORS } from '../../styles';
 
-interface ReduxDispatchProps {
-  createInvoice: () => void;
-}
+interface ReduxDispatchProps {}
 
 class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
-  componentDidMount() {
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-    this.props.createInvoice();
-  }
-
   render() {
     return (
       <div className="pane-group">
@@ -32,7 +20,7 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
           <ListView />
         </div>
         <div className="pane" style={{ background: COLORS.MAIN_BLACK }}>
-          ...
+          <InvoiceView />
         </div>
       </div>
     );
@@ -41,11 +29,7 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
 
 const mapDispatchToProps = (
   dispatch: InvoiceThunkDispatch
-): ReduxDispatchProps => ({
-  createInvoice: () => {
-    dispatch(createInvoice());
-  },
-});
+): ReduxDispatchProps => ({});
 
 export default connect(
   null,

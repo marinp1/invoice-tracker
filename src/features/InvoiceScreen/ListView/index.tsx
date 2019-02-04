@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import ListViewElement from './ListViewElement';
 import moment from 'moment';
 import _ from 'lodash';
+
+import { FirstItemContainer } from './styled';
+
+import ListViewElement from './ListViewElement';
+import CustomButton from '../../Utils/CustomButton';
+
 import {
   InvoiceThunkDispatch,
   filterInvoicesByKeyword,
-} from './invoiceActions';
-import { Invoice, DueDateCategory } from '../../types/invoice';
-import AppState from '../../types/state';
+  createTemporaryInvoice,
+} from '../invoiceActions';
+
+import { Invoice, DueDateCategory } from '../../../types/invoice';
+import AppState from '../../../types/state';
 
 interface ReduxStateProps {
   selectedDueDateCategory: DueDateCategory;
@@ -18,6 +25,7 @@ interface ReduxStateProps {
 
 interface ReduxDispatchProps {
   filterByKeyword: (keyword: string) => void;
+  createTemporaryInvoice: () => void;
 }
 
 interface State {
@@ -85,18 +93,26 @@ class ListView extends React.Component<
     return (
       <ul className="list-group">
         <li className="list-group-header">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="Filter bills"
-            value={this.state.filterValue}
-            onChange={event => {
-              this.setState({
-                filterValue: event.target.value,
-              });
-              this.debouncedSearch(event.target.value);
-            }}
-          />
+          <FirstItemContainer>
+            <input
+              className="form-control"
+              type="text"
+              placeholder="Filter bills"
+              value={this.state.filterValue}
+              onChange={event => {
+                this.setState({
+                  filterValue: event.target.value,
+                });
+                this.debouncedSearch(event.target.value);
+              }}
+            />
+            <CustomButton
+              theme="primary"
+              onClick={this.props.createTemporaryInvoice}
+            >
+              +
+            </CustomButton>
+          </FirstItemContainer>
         </li>
         {this.props.invoices
           .filter(this.filterInvoices)
@@ -129,6 +145,9 @@ const mapDispatchToProps = (
 ): ReduxDispatchProps => ({
   filterByKeyword: (keyword: string) => {
     dispatch(filterInvoicesByKeyword(keyword));
+  },
+  createTemporaryInvoice: () => {
+    dispatch(createTemporaryInvoice());
   },
 });
 

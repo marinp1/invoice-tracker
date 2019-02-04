@@ -2,9 +2,15 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
 import AppState from '../../types/state';
 
-import { Invoice, Category, DueDateCategory } from '../../types/invoice';
+import {
+  Invoice,
+  OpenInvoice,
+  Category,
+  DueDateCategory,
+} from '../../types/invoice';
 
 import { v1 as uuidv1 } from 'uuid';
+import moment from 'moment';
 
 export interface CreateInvoice {
   type: 'CREATE_INVOICE';
@@ -27,6 +33,16 @@ export interface EditInvoice {
   type: 'EDIT_INVOICE';
 }
 
+export interface SelectInvoice {
+  type: 'SELECT_INVOICE';
+  invoice: OpenInvoice;
+}
+
+export interface UnselectInvoice {
+  type: 'UNSELECT_INVOICE';
+  invoiceId: string;
+}
+
 export interface SelectDueDateCategory {
   type: 'SELECT_DUE_DATE_CATEGORY';
   dueDateCategory: DueDateCategory;
@@ -43,6 +59,8 @@ export type InvoiceAction =
   | FetchInvoices
   | MarkInvoiceAsPaid
   | EditInvoice
+  | SelectInvoice
+  | UnselectInvoice
   | SelectDueDateCategory
   | FilterInvoicesByKeyword;
 
@@ -72,6 +90,58 @@ export const createInvoice = (): InvoiceThunkResult<void> => async (
     invoice,
   });
   toast.success('Invoice created!');
+};
+
+export const createTemporaryInvoice = (): InvoiceThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  const invoice: OpenInvoice = {
+    id: uuidv1(),
+    amount: 0,
+    companyName: '',
+    category: Category.Misc,
+    dueDate: moment().format('YYYY-MM-DD'),
+    paid: false,
+    unsavedChanges: false,
+    name: 'New invoice',
+  };
+  dispatch({
+    type: 'SELECT_INVOICE',
+    invoice,
+  });
+};
+
+export const selectInvoice = (invoiceId: string): InvoiceThunkResult<void> => (
+  dispatch,
+  getState
+) => {
+  const invoice =
+    getState().invoice.invoices.find(inv => inv.id === invoiceId) || null;
+
+  const openInvoice: OpenInvoice | undefined = invoice
+    ? {
+        ...invoice,
+        unsavedChanges: false,
+        name: invoice.companyName,
+      }
+    : getState().invoice.openInvoices.find(inv => inv.id === invoiceId);
+
+  if (!openInvoice) return null;
+
+  dispatch({
+    type: 'SELECT_INVOICE',
+    invoice: openInvoice,
+  });
+};
+
+export const unselectInvoice = (
+  invoiceId: string
+): InvoiceThunkResult<void> => (dispatch, getState) => {
+  dispatch({
+    type: 'UNSELECT_INVOICE',
+    invoiceId,
+  });
 };
 
 export const selectDueDateCategory = (

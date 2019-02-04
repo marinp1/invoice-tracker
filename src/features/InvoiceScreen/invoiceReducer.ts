@@ -2,11 +2,15 @@ import { InvoiceAction, selectDueDateCategory } from './invoiceActions';
 import { DueDateCategory } from './../../types/invoice';
 import { InvoiceState } from '../../types/state';
 
+import _ from 'lodash';
+
 const initialState: InvoiceState = {
   filterString: '',
   selectedDueDateCategory: DueDateCategory.ALL,
   selectedCategories: [],
   invoices: [],
+  openInvoices: [],
+  selectedInvoiceId: null,
 };
 
 function appReducer(
@@ -28,6 +32,20 @@ function appReducer(
       return {
         ...state,
         filterString: action.keyword,
+      };
+    case 'SELECT_INVOICE':
+      return {
+        ...state,
+        openInvoices: _.uniqBy([...state.openInvoices, action.invoice], 'id'),
+        selectedInvoiceId: action.invoice.id,
+      };
+    case 'UNSELECT_INVOICE':
+      return {
+        ...state,
+        openInvoices: state.openInvoices.filter(
+          inv => inv.id !== action.invoiceId
+        ),
+        selectedInvoiceId: null,
       };
     default:
       return state;

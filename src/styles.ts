@@ -7,4 +7,6 @@ export const COLORS = {
   ACCENT_WHITE: '#e4fde1',
   LIGHT_BLUE: '#028090',
   DARK_BLUE: '#114b5f',
+  YELLOW: '#fdbc40',
+  GREEN: '#00D050',
 };

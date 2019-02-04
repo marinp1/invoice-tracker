@@ -1,5 +1,10 @@
 import { AuthStateType } from './index';
-import { Invoice, Category, DueDateCategory } from '../types/invoice';
+import {
+  Invoice,
+  OpenInvoice,
+  Category,
+  DueDateCategory,
+} from '../types/invoice';
 
 export interface AuthState {
   apiCallInProgress: boolean;
@@ -12,6 +17,8 @@ export interface InvoiceState {
   selectedDueDateCategory: DueDateCategory;
   selectedCategories: Category[];
   invoices: Invoice[];
+  openInvoices: OpenInvoice[];
+  selectedInvoiceId: string | null;
 }
 
 interface AppState {

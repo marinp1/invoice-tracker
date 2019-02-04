@@ -5,13 +5,13 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import * as glamor from 'glamor';
 import moment from 'moment';
 
-import { COLORS } from '../../styles';
+import { COLORS } from '../../../styles';
 
 import {
   Invoice,
   categoryToIcon,
   mapDueDateCategoryToColor,
-} from './../../types/invoice';
+} from '../../../types/invoice';
 
 const largeIconCss = glamor.css({
   fontSize: '36px',
@@ -27,9 +27,9 @@ const LargeIcon: React.SFC<{ iconName: IconDefinition }> = ({ iconName }) => (
 );
 
 const getColor = (days: number, paid: boolean) => {
-  if (paid) return '#00D050';
+  if (paid) return COLORS.GREEN;
   if (days <= 1) return COLORS.MAIN_RED;
-  if (days <= 5) return '#fdbc40';
+  if (days <= 5) return COLORS.YELLOW;
   if (days <= 20) return COLORS.MAIN_BLUE;
   return COLORS.DARK_BLUE;
 };
