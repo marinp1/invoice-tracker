@@ -103,7 +103,7 @@ export const createTemporaryInvoice = (): InvoiceThunkResult<void> => async (
     category: Category.Misc,
     dueDate: moment().format('YYYY-MM-DD'),
     paid: false,
-    unsavedChanges: false,
+    unsavedChanges: true,
     name: 'New invoice',
   };
   dispatch({

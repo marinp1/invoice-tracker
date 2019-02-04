@@ -38,6 +38,7 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
               onClick={() => props.closeInvoice(inv.id)}
             />
             {inv.name}
+            {inv.unsavedChanges && '*'}
           </div>
         ))}
       </div>

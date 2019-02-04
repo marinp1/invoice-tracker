@@ -36,7 +36,10 @@ function appReducer(
     case 'SELECT_INVOICE':
       return {
         ...state,
-        openInvoices: _.uniqBy([...state.openInvoices, action.invoice], 'id'),
+        openInvoices: _.uniqBy(
+          [...state.openInvoices, action.invoice],
+          'id'
+        ).filter(inv => inv.unsavedChanges),
         selectedInvoiceId: action.invoice.id,
       };
     case 'UNSELECT_INVOICE':
