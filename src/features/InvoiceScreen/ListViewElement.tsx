@@ -7,7 +7,11 @@ import moment from 'moment';
 
 import { COLORS } from '../../styles';
 
-import { Invoice, categoryToIcon } from './../../types/invoice';
+import {
+  Invoice,
+  categoryToIcon,
+  mapDueDateCategoryToColor,
+} from './../../types/invoice';
 
 const largeIconCss = glamor.css({
   fontSize: '36px',
@@ -75,7 +79,7 @@ const InvoiceListElement: React.SFC<Invoice> = props => {
   const amountToString = () => `${(props.amount / 100).toFixed(2)} €`;
 
   return (
-    <li className={`list-group-item ${generateIndicatorCss(diff)}`}>
+    <li className={`list-group-item ${generateIndicatorCss(diff, props.paid)}`}>
       <LargeIcon iconName={categoryToIcon(props.category)} />
       <div className="media-body">
         <strong>{props.companyName}</strong>

@@ -59,6 +59,7 @@ export const createInvoice = (): InvoiceThunkResult<void> => async (
     companyName: 'Random company',
     category: Category.Electricity,
     dueDate: '2020-02-16',
+    paid: Math.random() > 0.5,
   };
   dispatch({
     type: 'CREATE_INVOICE',

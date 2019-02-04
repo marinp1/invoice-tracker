@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import * as glamor from 'glamor';
 
 import { COLORS } from '../../styles';
-import { DueDateCategory } from '../../types/invoice';
+import {
+  DueDateCategory,
+  mapDueDateCategoryToColor,
+} from '../../types/invoice';
 import { PhotonIcon } from '../../types';
 import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
 import AppState from '../../types/state';
@@ -13,25 +16,6 @@ const sidebarTheme = glamor.css({
   color: COLORS.PURE_BLACK,
   paddingTop: '1.5rem',
 });
-
-const mapDueDateCategoryToColor = (dueDateCategory: DueDateCategory) => {
-  switch (dueDateCategory) {
-    case DueDateCategory.ALL:
-      return COLORS.PURE_BLACK;
-    case DueDateCategory.UNPAID:
-      return COLORS.MAIN_BLACK;
-    case DueDateCategory.TODAY:
-      return COLORS.MAIN_RED;
-    case DueDateCategory.NEXT_5_DAYS:
-      return '#fdbc40';
-    case DueDateCategory.NEXT_20_DAYS:
-      return COLORS.MAIN_BLUE;
-    case DueDateCategory.LATER:
-      return COLORS.DARK_BLUE;
-    case DueDateCategory.PAID:
-      return '#00D050';
-  }
-};
 
 interface NavItemProps {
   selectedName: string;
