@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm, ConfigProps } from 'redux-form';
 
+import DatePicker from './DatePicker';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
@@ -46,10 +47,38 @@ const renderGeneralField: React.SFC<any> = ({
   </div>
 );
 
+const renderDateField: React.SFC<any> = ({
+  name,
+  label,
+  input,
+  meta: { touched, error, warning },
+}) => (
+  <div className="form-group">
+    <label
+      htmlFor={name}
+      style={{ color: COLORS.PURE_WHITE, fontSize: '110%', fontWeight: 'bold' }}
+    >
+      {label}
+    </label>
+    <DatePicker onChange={input.onChange} className="form-control" />
+    {touched &&
+      ((error && (
+        <span
+          style={{
+            color: COLORS.MAIN_RED,
+          }}
+        >
+          {error}
+        </span>
+      )) ||
+        (warning && <span>{warning}</span>))}
+  </div>
+);
+
 export interface InvoiceFormData {
   companyName: string;
   category: string;
-  dueDate: string;
+  dueDate: Date;
   amount: number;
   paid: boolean;
 }
@@ -78,12 +107,7 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           component={renderGeneralField}
           label="Recipient"
         />
-        <Field
-          name="dueDate"
-          type="date"
-          component={renderGeneralField}
-          label="Due date"
-        />
+        <Field name="dueDate" component={renderDateField} label="Due date" />
         <Field
           name="amount"
           type="number"

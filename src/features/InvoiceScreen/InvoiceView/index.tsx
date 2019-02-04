@@ -42,6 +42,7 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
         <div className="tab-group">
           {props.openInvoices.map(inv => (
             <div
+              key={inv.id}
               onClick={() => props.selectInvoice(inv.id)}
               className={`tab-item${
                 inv.id === props.selectedInvoiceId ? ' active' : ''
