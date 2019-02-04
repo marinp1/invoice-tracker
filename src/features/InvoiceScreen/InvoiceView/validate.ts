@@ -21,6 +21,14 @@ const validate = (values: InvoiceFormData) => {
     errors.amount = 'Amount should be at least 0.01 €';
   }
 
+  if (!values.dueDate) {
+    errors.dueDate = 'Required';
+  }
+
+  if (!values.category) {
+    errors.category = 'Required';
+  }
+
   return errors;
 };
 

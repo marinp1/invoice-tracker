@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm, ConfigProps } from 'redux-form';
 
 import DatePicker from './DatePicker';
+import ListSelector from './ListSelector';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
@@ -13,11 +14,12 @@ import { OpenInvoice, Category } from '../../../types/invoice';
 import AppState from '../../../types/state';
 import { COLORS } from '../../../styles';
 
-const renderGeneralField: React.SFC<any> = ({
+const renderField: React.SFC<any> = ({
   input,
   name,
   label,
   type,
+  Component,
   meta: { touched, error, warning },
 }) => (
   <div className="form-group">
@@ -27,40 +29,16 @@ const renderGeneralField: React.SFC<any> = ({
     >
       {label}
     </label>
-    <input
-      {...input}
-      placeholder={label}
-      type={type}
-      className="form-control"
-    />
-    {touched &&
-      ((error && (
-        <span
-          style={{
-            color: COLORS.MAIN_RED,
-          }}
-        >
-          {error}
-        </span>
-      )) ||
-        (warning && <span>{warning}</span>))}
-  </div>
-);
-
-const renderDateField: React.SFC<any> = ({
-  name,
-  label,
-  input,
-  meta: { touched, error, warning },
-}) => (
-  <div className="form-group">
-    <label
-      htmlFor={name}
-      style={{ color: COLORS.PURE_WHITE, fontSize: '110%', fontWeight: 'bold' }}
-    >
-      {label}
-    </label>
-    <DatePicker onChange={input.onChange} className="form-control" />
+    {type ? (
+      <input
+        {...input}
+        placeholder={label}
+        type={type}
+        className="form-control"
+      />
+    ) : (
+      <Component onChange={input.onChange} className="form-control" />
+    )}
     {touched &&
       ((error && (
         <span
@@ -104,14 +82,25 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
         <Field
           name="companyName"
           type="text"
-          component={renderGeneralField}
+          component={renderField}
           label="Recipient"
         />
-        <Field name="dueDate" component={renderDateField} label="Due date" />
+        <Field
+          name="dueDate"
+          component={renderField}
+          label="Due date"
+          Component={DatePicker}
+        />
+        <Field
+          name="category"
+          component={renderField}
+          label="Category"
+          Component={ListSelector}
+        />
         <Field
           name="amount"
           type="number"
-          component={renderGeneralField}
+          component={renderField}
           label="Amount"
         />
         <ButtonContainer>
