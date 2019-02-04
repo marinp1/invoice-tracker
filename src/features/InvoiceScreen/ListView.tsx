@@ -2,16 +2,36 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import ListViewElement from './ListViewElement';
 import moment from 'moment';
-
+import _ from 'lodash';
+import {
+  InvoiceThunkDispatch,
+  filterInvoicesByKeyword,
+} from './invoiceActions';
 import { Invoice, DueDateCategory } from '../../types/invoice';
 import AppState from '../../types/state';
 
 interface ReduxStateProps {
   selectedDueDateCategory: DueDateCategory;
   invoices: Invoice[];
+  filterString: string;
 }
 
-class ListView extends React.Component<ReduxStateProps, {}> {
+interface ReduxDispatchProps {
+  filterByKeyword: (keyword: string) => void;
+}
+
+interface State {
+  filterValue: string;
+}
+
+class ListView extends React.Component<
+  ReduxStateProps & ReduxDispatchProps,
+  State
+> {
+  state: State = {
+    filterValue: '',
+  };
+
   filterInvoices = (invoice: Invoice) => {
     if (this.props.selectedDueDateCategory === DueDateCategory.ALL) {
       return true;
@@ -25,13 +45,13 @@ class ListView extends React.Component<ReduxStateProps, {}> {
       return invoice.paid;
     }
 
+    if (invoice.paid) return false;
+
     const now = moment();
     const dueDate = moment(invoice.dueDate);
     const diff = Math.ceil(
       moment.duration(dueDate.startOf('day').diff(now.startOf('day'))).asDays()
     );
-
-    if (invoice.paid) return false;
 
     if (this.props.selectedDueDateCategory === DueDateCategory.TODAY) {
       return diff <= 1;
@@ -50,6 +70,17 @@ class ListView extends React.Component<ReduxStateProps, {}> {
     }
   };
 
+  filterInvoicesByKeyword = (invoice: Invoice) => {
+    if (this.props.filterString.trim().length === 0) return true;
+    return (
+      invoice.companyName
+        .toLowerCase()
+        .indexOf(this.props.filterString.toLowerCase()) !== -1
+    );
+  };
+
+  debouncedSearch = _.debounce(this.props.filterByKeyword, 100);
+
   render() {
     return (
       <ul className="list-group">
@@ -58,19 +89,30 @@ class ListView extends React.Component<ReduxStateProps, {}> {
             className="form-control"
             type="text"
             placeholder="Filter bills"
+            value={this.state.filterValue}
+            onChange={event => {
+              this.setState({
+                filterValue: event.target.value,
+              });
+              this.debouncedSearch(event.target.value);
+            }}
           />
         </li>
-        {this.props.invoices.filter(this.filterInvoices).map(invoice => (
-          <ListViewElement
-            key={invoice.id}
-            id={invoice.id}
-            amount={invoice.amount}
-            category={invoice.category}
-            companyName={invoice.companyName}
-            dueDate={invoice.dueDate}
-            paid={invoice.paid}
-          />
-        ))}
+        {this.props.invoices
+          .filter(this.filterInvoices)
+          .filter(this.filterInvoicesByKeyword)
+          .map(invoice => (
+            <ListViewElement
+              filterKeyword={this.props.filterString}
+              key={invoice.id}
+              id={invoice.id}
+              amount={invoice.amount}
+              category={invoice.category}
+              companyName={invoice.companyName}
+              dueDate={invoice.dueDate}
+              paid={invoice.paid}
+            />
+          ))}
       </ul>
     );
   }
@@ -79,9 +121,18 @@ class ListView extends React.Component<ReduxStateProps, {}> {
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
   selectedDueDateCategory: state.invoice.selectedDueDateCategory,
   invoices: state.invoice.invoices,
+  filterString: state.invoice.filterString,
+});
+
+const mapDispatchToProps = (
+  dispatch: InvoiceThunkDispatch
+): ReduxDispatchProps => ({
+  filterByKeyword: (keyword: string) => {
+    dispatch(filterInvoicesByKeyword(keyword));
+  },
 });
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(ListView);

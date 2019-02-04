@@ -32,13 +32,19 @@ export interface SelectDueDateCategory {
   dueDateCategory: DueDateCategory;
 }
 
+export interface FilterInvoicesByKeyword {
+  type: 'FILTER_INVOICES_BY_KEYWORD';
+  keyword: string;
+}
+
 export type InvoiceAction =
   | CreateInvoice
   | DeleteInvoice
   | FetchInvoices
   | MarkInvoiceAsPaid
   | EditInvoice
-  | SelectDueDateCategory;
+  | SelectDueDateCategory
+  | FilterInvoicesByKeyword;
 
 type InvoiceThunkResult<R> = ThunkAction<R, AppState, undefined, InvoiceAction>;
 
@@ -56,7 +62,7 @@ export const createInvoice = (): InvoiceThunkResult<void> => async (
   const invoice: Invoice = {
     id: uuidv1(),
     amount: Math.random() * 5400 + 600,
-    companyName: 'Random company',
+    companyName: Math.random() > 0.5 ? 'Random company' : 'Satunnainen yritys',
     category: Category.Electricity,
     dueDate: '2020-02-16',
     paid: Math.random() > 0.5,
@@ -74,5 +80,14 @@ export const selectDueDateCategory = (
   dispatch({
     type: 'SELECT_DUE_DATE_CATEGORY',
     dueDateCategory,
+  });
+};
+
+export const filterInvoicesByKeyword = (
+  keyword: string
+): InvoiceThunkResult<void> => (dispatch, getState) => {
+  dispatch({
+    type: 'FILTER_INVOICES_BY_KEYWORD',
+    keyword,
   });
 };

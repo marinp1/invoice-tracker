@@ -65,7 +65,9 @@ const mapDurationToString = (days: number) => {
 };
 
 // FIXME: Locale and hardcoded currency
-const InvoiceListElement: React.SFC<Invoice> = props => {
+const InvoiceListElement: React.SFC<
+  Invoice & { filterKeyword: string }
+> = props => {
   const now = moment();
   const dueDate = moment(props.dueDate);
   const diff = Math.ceil(
@@ -78,11 +80,31 @@ const InvoiceListElement: React.SFC<Invoice> = props => {
 
   const amountToString = () => `${(props.amount / 100).toFixed(2)} €`;
 
+  const filteredTitle = () => {
+    const startIndex = props.companyName
+      .toLowerCase()
+      .indexOf(props.filterKeyword.toLowerCase());
+    const endIndex = startIndex + props.filterKeyword.length;
+    return (
+      <p>
+        {props.companyName.substr(0, startIndex)}
+        <strong>
+          {props.companyName.substr(startIndex, props.filterKeyword.length)}
+        </strong>
+        {props.companyName.substr(endIndex)}
+      </p>
+    );
+  };
+
   return (
     <li className={`list-group-item ${generateIndicatorCss(diff, props.paid)}`}>
       <LargeIcon iconName={categoryToIcon(props.category)} />
       <div className="media-body">
-        <strong>{props.companyName}</strong>
+        {props.filterKeyword.trim().length > 0 ? (
+          filteredTitle()
+        ) : (
+          <strong>{props.companyName}</strong>
+        )}
         <p>{dueDateToLocale()}</p>
         <p>{amountToString()}</p>
       </div>

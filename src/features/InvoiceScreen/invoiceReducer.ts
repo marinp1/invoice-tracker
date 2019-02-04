@@ -24,6 +24,11 @@ function appReducer(
         ...state,
         selectedDueDateCategory: action.dueDateCategory,
       };
+    case 'FILTER_INVOICES_BY_KEYWORD':
+      return {
+        ...state,
+        filterString: action.keyword,
+      };
     default:
       return state;
   }
