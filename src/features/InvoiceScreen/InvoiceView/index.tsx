@@ -38,7 +38,7 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
         flexDirection: 'column',
       }}
     >
-      {props.openInvoices.length > 0 ? (
+      {props.openInvoices.length > 0 && (
         <div className="tab-group">
           {props.openInvoices.map(inv => (
             <div
@@ -57,26 +57,26 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
             </div>
           ))}
         </div>
-      ) : (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img src={require('./logo.png')} width="100%" />
-        </div>
       )}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: selectedInvoice ? 0.02 : 0.05,
+        }}
+      >
+        <img src={require('./logo.png')} width="100%" />
+      </div>
       {selectedInvoice && (
         <div
           style={{
-            background: COLORS.LIGHT_BLUE,
+            zIndex: 10,
             padding: '1rem 2rem 1rem 2rem',
             flexGrow: 1,
           }}

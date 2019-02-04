@@ -8,6 +8,9 @@ export const ButtonContainer = glamorous.div({
     marginTop: '1rem',
     width: '100%',
   },
+  '& #create-button': {
+    fontWeight: 'bolder',
+  },
 });
 
 export const DatePickerContainer = glamorous.div({

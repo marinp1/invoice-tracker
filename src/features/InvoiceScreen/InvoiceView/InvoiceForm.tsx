@@ -25,7 +25,7 @@ const renderField: React.SFC<any> = ({
   <div className="form-group">
     <label
       htmlFor={name}
-      style={{ color: COLORS.PURE_WHITE, fontSize: '110%', fontWeight: 'bold' }}
+      style={{ color: COLORS.MAIN_BLACK, fontSize: '110%', fontWeight: 'bold' }}
     >
       {label}
     </label>
@@ -104,10 +104,10 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           label="Amount"
         />
         <ButtonContainer>
-          <CustomButton type="button" theme="default" onClick={props.reset}>
+          <CustomButton type="button" theme="primary" onClick={props.reset}>
             CLEAR
           </CustomButton>
-          <CustomButton type="submit" theme="success">
+          <CustomButton type="submit" theme="success" id="create-button">
             {props.selectedInvoice.name === 'New invoice'
               ? 'CREATE INVOICE'
               : 'SAVE INVOICE'}

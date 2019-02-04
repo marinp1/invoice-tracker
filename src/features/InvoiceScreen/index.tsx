@@ -28,7 +28,7 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
         <div
           className="pane"
           style={{
-            background: COLORS.MAIN_BLACK,
+            background: '#f5f5f5',
           }}
         >
           <InvoiceView />
