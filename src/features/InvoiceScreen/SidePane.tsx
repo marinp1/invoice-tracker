@@ -1,8 +1,12 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import * as glamor from 'glamor';
 
 import { COLORS } from '../../styles';
+import { DueDateCategory } from '../../types/invoice';
 import { PhotonIcon } from '../../types';
+import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
+import AppState from '../../types/state';
 
 const sidebarTheme = glamor.css({
   background: COLORS.ACCENT_WHITE,
@@ -10,100 +14,85 @@ const sidebarTheme = glamor.css({
   paddingTop: '1.5rem',
 });
 
+const mapDueDateCategoryToColor = (dueDateCategory: DueDateCategory) => {
+  switch (dueDateCategory) {
+    case DueDateCategory.ALL:
+      return COLORS.PURE_BLACK;
+    case DueDateCategory.UNPAID:
+      return COLORS.MAIN_BLACK;
+    case DueDateCategory.TODAY:
+      return COLORS.MAIN_RED;
+    case DueDateCategory.NEXT_5_DAYS:
+      return '#fdbc40';
+    case DueDateCategory.NEXT_20_DAYS:
+      return COLORS.MAIN_BLUE;
+    case DueDateCategory.LATER:
+      return COLORS.DARK_BLUE;
+    case DueDateCategory.PAID:
+      return '#00D050';
+  }
+};
+
 interface NavItemProps {
   selectedName: string;
-  icon: PhotonIcon;
-  text: string;
-  onClick: (newSelection: string) => void;
-  iconColor?: string;
+  category: DueDateCategory;
+  onClick: (sel: DueDateCategory) => void;
 }
 
 const NavItem: React.SFC<NavItemProps> = props => (
   <span
-    onClick={() => props.onClick(props.text)}
+    onClick={() => props.onClick(props.category)}
     className={`nav-group-item${
-      props.selectedName === props.text ? ' active' : ''
+      props.selectedName === props.category ? ' active' : ''
     }`}
   >
     <span
-      className={`${props.icon}`}
-      style={{ color: `${props.iconColor || 'initial'}` }}
+      className={PhotonIcon.Record}
+      style={{ color: mapDueDateCategoryToColor(props.category) }}
     />
-    {props.text}
+    {props.category}
   </span>
 );
 
-interface NavGroupState {
-  selected: string;
+interface ReduxStateProps {
+  selectedDueDate: DueDateCategory;
 }
 
-class NavGroup extends React.Component<{}, NavGroupState> {
-  state: NavGroupState = {
-    selected: 'All',
-  };
-
-  changeSelection = (newSelected: string) =>
-    this.setState({
-      selected: newSelected,
-    });
-
-  render() {
-    return (
-      <nav className="nav-group">
-        <h5 className="nav-group-title" style={{ color: COLORS.PURE_BLACK }}>
-          Due date
-        </h5>
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={COLORS.PURE_BLACK}
-          text={'All'}
-          onClick={this.changeSelection}
-        />
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={COLORS.MAIN_RED}
-          text={'Today'}
-          onClick={this.changeSelection}
-        />
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={`#fdbc40`}
-          text={'Next 5 days'}
-          onClick={this.changeSelection}
-        />
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={COLORS.MAIN_BLUE}
-          text={'Next 20 days'}
-          onClick={this.changeSelection}
-        />
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={COLORS.DARK_BLUE}
-          text={'Later'}
-          onClick={this.changeSelection}
-        />
-        <NavItem
-          selectedName={this.state.selected}
-          icon={PhotonIcon.Record}
-          iconColor={`#00D050`}
-          text={'Paid'}
-          onClick={this.changeSelection}
-        />
-      </nav>
-    );
-  }
+interface ReduxDispatchProps {
+  changeDueDateSelection: (sel: DueDateCategory) => void;
 }
 
-const SidePane = () => (
+const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
   <div className={`pane-sm sidebar ${sidebarTheme}`}>
-    <NavGroup />
+    <nav className="nav-group">
+      <h5 className="nav-group-title" style={{ color: COLORS.PURE_BLACK }}>
+        Due date
+      </h5>
+      {Object.values(DueDateCategory).map((cat: DueDateCategory) => (
+        <NavItem
+          key={cat}
+          selectedName={props.selectedDueDate}
+          category={cat}
+          onClick={props.changeDueDateSelection}
+        />
+      ))}
+    </nav>
   </div>
 );
 
-export default SidePane;
+const mapStateToProps = (state: AppState): ReduxStateProps => ({
+  selectedDueDate: state.invoice.selectedDueDateCategory,
+});
+
+const mapDispatchToProps = (
+  dispatch: InvoiceThunkDispatch
+): ReduxDispatchProps => ({
+  changeDueDateSelection: (sel: DueDateCategory) => {
+    dispatch(selectDueDateCategory(sel));
+  },
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SidePane);

@@ -1,21 +1,6 @@
 import * as React from 'react';
-import * as glamor from 'glamor';
-
-import { PhotonIcon } from '../../types';
-
-const largeIconCss = glamor.css({
-  fontSize: '36px',
-  margin: 0,
-  marginRight: '1rem !important',
-  marginTop: '-0.5rem',
-  marginBottom: '-0.5rem',
-});
-
-const LargeIcon: React.SFC<{ iconName: PhotonIcon }> = ({ iconName }) => (
-  <div
-    className={`img-circle media-object pull-left ${iconName} ${largeIconCss} `}
-  />
-);
+import { Category } from '../../types/invoice';
+import ListViewElement from './ListViewElement';
 
 class ListView extends React.Component<{}, {}> {
   render() {
@@ -28,27 +13,48 @@ class ListView extends React.Component<{}, {}> {
             placeholder="Filter bills"
           />
         </li>
-        <li className="list-group-item">
-          <LargeIcon iconName={PhotonIcon.Droplet} />
-          <div className="media-body">
-            <strong>Name of company</strong>
-            <p>20.02.2019</p>
-            <p>40,00 €</p>
-          </div>
-        </li>
-        <li className="list-group-item">
-          <img
-            className="img-circle media-object pull-left"
-            src="/assets/img/avatar2.png"
-            width="32"
-            height="32"
-          />
-          <div className="media-body">
-            <strong>List item title</strong>
-            <p>Lorem ipsum dolor sit amet.</p>
-          </div>
-        </li>
-        ...
+        <ListViewElement
+          id="1"
+          category={Category.Soccer}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-02-02'}
+        />
+        <ListViewElement
+          id="1"
+          category={Category.Misc}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-02-03'}
+        />
+        <ListViewElement
+          id="1"
+          category={Category.Rent}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-02-04'}
+        />
+        <ListViewElement
+          id="1"
+          category={Category.Electricity}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-02-05'}
+        />
+        <ListViewElement
+          id="1"
+          category={Category.Internet}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-02-06'}
+        />
+        <ListViewElement
+          id="1"
+          category={Category.Friend}
+          companyName="Company name"
+          amount={4000}
+          dueDate={'2019-03-06'}
+        />
       </ul>
     );
   }

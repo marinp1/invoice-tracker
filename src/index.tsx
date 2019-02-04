@@ -18,9 +18,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import authReducer from './features/Auth/authReducer';
+import invoiceReducer from './features/InvoiceScreen/invoiceReducer';
 
 const combinedReducer = combineReducers({
   auth: authReducer,
+  invoice: invoiceReducer,
   form: formReducer,
 });
 
