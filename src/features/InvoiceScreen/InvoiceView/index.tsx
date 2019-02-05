@@ -73,7 +73,7 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
       >
         <img src={require('./logo.png')} width="100%" />
       </div>
-      {selectedInvoice && (
+      {props.openInvoices.length > 0 && selectedInvoice && (
         <div
           style={{
             zIndex: 10,
@@ -81,7 +81,15 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
             flexGrow: 1,
           }}
         >
-          <InvoiceForm selectedInvoice={selectedInvoice} />
+          {props.openInvoices.map(inv => (
+            <div
+              style={{
+                display: inv.id === selectedInvoice.id ? 'block' : 'none',
+              }}
+            >
+              <InvoiceForm selectedInvoice={inv} formName={inv.id} />
+            </div>
+          ))}
         </div>
       )}
     </div>

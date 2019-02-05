@@ -68,6 +68,7 @@ export interface InvoiceFormData {
 
 interface CustomProps {
   selectedInvoice: OpenInvoice;
+  formName: string;
 }
 
 interface DispatchProps {
@@ -153,7 +154,7 @@ const mapStateToProps = (
   props: CustomProps | {}
 ): ConfigProps<InvoiceFormData, CustomProps> => ({
   initialValues: {},
-  form: 'invoice-form',
+  form: (props as CustomProps).formName,
   touchOnChange: true,
   touchOnBlur: true,
 });
