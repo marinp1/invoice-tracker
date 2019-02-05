@@ -5,36 +5,24 @@ interface Props {
   className: string;
   onChange: (val: string) => void;
   initialValue: string;
+  value: string;
 }
 
-interface State {
-  val: string;
-}
-
-class IbanInput extends React.Component<Props, State> {
-  state: State = {
-    val: this.props.initialValue,
-  };
-
-  handleChange = (val: string) => {
+const IbanInput: React.SFC<Props> = props => {
+  const handleChange = (val: string) => {
     const value = IBAN.isValid(val) ? IBAN.printFormat(val, ' ') : val;
-    this.props.onChange(value);
-    this.setState({
-      val: value,
-    });
+    props.onChange(value);
   };
 
-  render() {
-    return (
-      <input
-        className={this.props.className}
-        placeholder="IBAN"
-        type="text"
-        value={this.state.val}
-        onChange={ev => this.handleChange(ev.target.value)}
-      />
-    );
-  }
-}
+  return (
+    <input
+      className={props.className}
+      placeholder="IBAN"
+      type="text"
+      value={props.value}
+      onChange={ev => handleChange(ev.target.value)}
+    />
+  );
+};
 
 export default IbanInput;

@@ -5,40 +5,24 @@ interface Props {
   className: string;
   onChange: (val: number) => void;
   initialValue: number;
+  value: number;
 }
 
-interface State {
-  value: string;
-}
-
-class CurrencyInputComponent extends React.Component<Props, State> {
-  state: State = {
-    value: String(this.props.initialValue / 100),
+const CurrencyInputComponent: React.SFC<Props> = props => {
+  const handleChange = (event: any, maskedValue: any, floatValue: any) => {
+    props.onChange(floatValue * 100);
   };
 
-  componentDidMount() {
-    this.props.onChange(this.props.initialValue);
-  }
-
-  handleChange = (event: any, maskedValue: any, floatValue: any) => {
-    this.setState({
-      value: maskedValue,
-    });
-    this.props.onChange(floatValue * 100);
-  };
-
-  render() {
-    return (
-      <CurrencyInput
-        className={this.props.className}
-        suffix=" €"
-        decimalSeparator=","
-        thousandSeparator=" "
-        value={this.state.value}
-        onChangeEvent={this.handleChange}
-      />
-    );
-  }
-}
+  return (
+    <CurrencyInput
+      className={props.className}
+      suffix=" €"
+      decimalSeparator=","
+      thousandSeparator=" "
+      value={String(props.value / 100)}
+      onChangeEvent={handleChange}
+    />
+  );
+};
 
 export default CurrencyInputComponent;

@@ -7,35 +7,19 @@ interface Props {
   onChange: (val: any) => void;
   initialValue: Date;
   className: string;
+  value: Date;
 }
 
-interface State {
-  date: Date;
-}
-
-class DatePickerComponent extends React.Component<Props, State> {
-  state: State = {
-    date: this.props.initialValue,
+const DatePickerComponent: React.SFC<Props> = props => {
+  const handleChange = (date: Date) => {
+    props.onChange(date);
   };
 
-  componentDidMount = () => {
-    this.props.onChange(this.state.date);
-  };
-
-  handleChange = (date: Date) => {
-    this.setState({
-      date,
-    });
-    this.props.onChange(date);
-  };
-
-  render() {
-    return (
-      <DatePickerContainer className={this.props.className}>
-        <DatePicker selected={this.state.date} onChange={this.handleChange} />
-      </DatePickerContainer>
-    );
-  }
-}
+  return (
+    <DatePickerContainer className={props.className}>
+      <DatePicker selected={props.value} onChange={handleChange} />
+    </DatePickerContainer>
+  );
+};
 
 export default DatePickerComponent;

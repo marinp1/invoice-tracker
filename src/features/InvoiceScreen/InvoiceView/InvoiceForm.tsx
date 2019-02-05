@@ -43,6 +43,7 @@ const renderField: React.SFC<any> = ({
       <Component
         onChange={input.onChange}
         className="form-control"
+        value={input.value}
         initialValue={initial}
       />
     )}
@@ -152,7 +153,12 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           <CustomButton type="button" theme="primary" onClick={props.reset}>
             CLEAR
           </CustomButton>
-          <CustomButton type="submit" theme="success" id="create-button">
+          <CustomButton
+            type="submit"
+            theme="success"
+            id="create-button"
+            disabled={props.submitting || props.pristine || props.invalid}
+          >
             {props.selectedInvoice.name === 'New invoice'
               ? 'CREATE INVOICE'
               : 'SAVE INVOICE'}

@@ -21,6 +21,7 @@ interface Props {
   onChange: (val: any) => void;
   className: string;
   initialValue: string;
+  value: string;
 }
 
 const groupStyles = {
@@ -85,6 +86,7 @@ const ListSelector: React.SFC<Props> = props => (
     }
     closeMenuOnSelect={true}
     defaultValue={fetchInitial(props.initialValue, options()[0].options)}
+    value={fetchInitial(props.value, options()[0].options)}
     components={{ Option: IconOption }}
     options={options()}
     formatGroupLabel={formatGroupLabel}
