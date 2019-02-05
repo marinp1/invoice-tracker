@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import posed from 'react-pose';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -35,7 +36,13 @@ interface ReduxDispatchProps {
 
 interface State {
   filterValue: string;
+  pose: 'open' | 'closed';
 }
+
+const Parent = posed.div({
+  open: { opacity: 1, delayChildren: 200, staggerChildren: 50 },
+  closed: { opacity: 0, delay: 300 },
+});
 
 class ListView extends React.Component<
   ReduxStateProps & ReduxDispatchProps,
@@ -43,6 +50,7 @@ class ListView extends React.Component<
 > {
   state: State = {
     filterValue: '',
+    pose: 'closed',
   };
 
   filterInvoices = (invoice: Invoice) => {
@@ -94,6 +102,12 @@ class ListView extends React.Component<
 
   debouncedSearch = _.debounce(this.props.filterByKeyword, 100);
 
+  componentDidMount() {
+    this.setState({
+      pose: 'open',
+    });
+  }
+
   render() {
     return (
       <ul
@@ -122,10 +136,13 @@ class ListView extends React.Component<
             </CustomButton>
           </FirstItemContainer>
         </li>
-        {this.props.invoices
-          .filter(this.filterInvoices)
-          .filter(this.filterInvoicesByKeyword)
-          .map(invoice => (
+        <Parent pose={this.state.pose}>
+          {_.sortBy(
+            this.props.invoices
+              .filter(this.filterInvoices)
+              .filter(this.filterInvoicesByKeyword),
+            ['dueDate', 'companyName']
+          ).map(invoice => (
             <ListViewElement
               onClick={this.props.selectInvoice}
               selected={this.props.selectedInvoiceId === invoice.id}
@@ -134,6 +151,7 @@ class ListView extends React.Component<
               {...invoice}
             />
           ))}
+        </Parent>
       </ul>
     );
   }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import posed from 'react-pose';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -65,6 +66,11 @@ const mapDurationToString = (days: number) => {
   }
 };
 
+const Child = posed.li({
+  open: { x: 0, opacity: 1 },
+  closed: { x: 100, opacity: 0 },
+});
+
 // FIXME: Locale and hardcoded currency
 const InvoiceListElement: React.SFC<
   Invoice & {
@@ -102,7 +108,7 @@ const InvoiceListElement: React.SFC<
   };
 
   return (
-    <li
+    <Child
       className={`list-group-item ${generateIndicatorCss(
         diff,
         props.selected,
@@ -120,7 +126,7 @@ const InvoiceListElement: React.SFC<
         <p>{dueDateToLocale()}</p>
         <p>{amountToString()}</p>
       </div>
-    </li>
+    </Child>
   );
 };
 
