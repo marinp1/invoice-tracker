@@ -12,6 +12,8 @@ import {
   InvoiceThunkDispatch,
   filterInvoicesByKeyword,
   createTemporaryInvoice,
+  selectInvoice,
+  unselectInvoice,
 } from '../invoiceActions';
 
 import { Invoice, DueDateCategory } from '../../../types/invoice';
@@ -19,6 +21,7 @@ import AppState from '../../../types/state';
 
 interface ReduxStateProps {
   selectedDueDateCategory: DueDateCategory;
+  selectedInvoiceId: string | null;
   invoices: Invoice[];
   filterString: string;
 }
@@ -26,6 +29,8 @@ interface ReduxStateProps {
 interface ReduxDispatchProps {
   filterByKeyword: (keyword: string) => void;
   createTemporaryInvoice: () => void;
+  selectInvoice: (id: string) => void;
+  unselectInvoice: (id: string) => void;
 }
 
 interface State {
@@ -91,7 +96,10 @@ class ListView extends React.Component<
 
   render() {
     return (
-      <ul className="list-group">
+      <ul
+        className="list-group"
+        onClick={() => unselectInvoice(String(this.props.selectedInvoiceId))}
+      >
         <li className="list-group-header">
           <FirstItemContainer>
             <input
@@ -119,6 +127,8 @@ class ListView extends React.Component<
           .filter(this.filterInvoicesByKeyword)
           .map(invoice => (
             <ListViewElement
+              onClick={this.props.selectInvoice}
+              selected={this.props.selectedInvoiceId === invoice.id}
               filterKeyword={this.props.filterString}
               key={invoice.id}
               {...invoice}
@@ -133,6 +143,7 @@ const mapStateToProps = (state: AppState): ReduxStateProps => ({
   selectedDueDateCategory: state.invoice.selectedDueDateCategory,
   invoices: state.invoice.invoices,
   filterString: state.invoice.filterString,
+  selectedInvoiceId: state.invoice.selectedInvoiceId,
 });
 
 const mapDispatchToProps = (
@@ -143,6 +154,12 @@ const mapDispatchToProps = (
   },
   createTemporaryInvoice: () => {
     dispatch(createTemporaryInvoice());
+  },
+  selectInvoice: (id: string) => {
+    dispatch(selectInvoice(id));
+  },
+  unselectInvoice: (id: string) => {
+    dispatch(unselectInvoice(id));
   },
 });
 

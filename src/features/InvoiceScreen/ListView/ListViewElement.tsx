@@ -30,8 +30,13 @@ const getColor = (days: number, paid: boolean) => {
   return COLORS.DARK_BLUE;
 };
 
-const generateIndicatorCss = (days: number, paid: boolean = false) =>
+const generateIndicatorCss = (
+  days: number,
+  selected: boolean,
+  paid: boolean = false
+) =>
   glamor.css({
+    background: selected ? COLORS.ACCENT_WHITE : 'initial',
     position: 'relative',
     ':before': {
       content: ' ',
@@ -62,7 +67,11 @@ const mapDurationToString = (days: number) => {
 
 // FIXME: Locale and hardcoded currency
 const InvoiceListElement: React.SFC<
-  Invoice & { filterKeyword: string }
+  Invoice & {
+    filterKeyword: string;
+    onClick: (id: string) => void;
+    selected: boolean;
+  }
 > = props => {
   const now = moment();
   const dueDate = moment(props.dueDate);
@@ -93,7 +102,14 @@ const InvoiceListElement: React.SFC<
   };
 
   return (
-    <li className={`list-group-item ${generateIndicatorCss(diff, props.paid)}`}>
+    <li
+      className={`list-group-item ${generateIndicatorCss(
+        diff,
+        props.selected,
+        props.paid
+      )}`}
+      onClick={() => props.onClick(props.id)}
+    >
       <LargeIcon iconName={categoryToIcon(props.category)} />
       <div className="media-body">
         {props.filterKeyword.trim().length > 0 ? (

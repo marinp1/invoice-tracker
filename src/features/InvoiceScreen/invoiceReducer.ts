@@ -1,5 +1,5 @@
-import { InvoiceAction, selectDueDateCategory } from './invoiceActions';
-import { DueDateCategory } from './../../types/invoice';
+import { InvoiceAction } from './invoiceActions';
+import { DueDateCategory, Category } from './../../types/invoice';
 import { InvoiceState } from '../../types/state';
 
 import _ from 'lodash';
@@ -8,7 +8,19 @@ const initialState: InvoiceState = {
   filterString: '',
   selectedDueDateCategory: DueDateCategory.ALL,
   selectedCategories: [],
-  invoices: [],
+  invoices: [
+    {
+      id: 'demo',
+      amount: 4000,
+      dueDate: '2019-02-20',
+      reference: '213123',
+      companyName: 'Soccer',
+      iban: '',
+      message: null,
+      category: Category.Soccer,
+      paid: false,
+    },
+  ],
   openInvoices: [],
   selectedInvoiceId: null,
 };
@@ -36,10 +48,7 @@ function appReducer(
     case 'SELECT_INVOICE':
       return {
         ...state,
-        openInvoices: _.uniqBy(
-          [...state.openInvoices, action.invoice],
-          'id'
-        ).filter(inv => inv.unsavedChanges),
+        openInvoices: _.uniqBy([...state.openInvoices, action.invoice], 'id'),
         selectedInvoiceId: action.invoice.id,
       };
     case 'UNSELECT_INVOICE':
