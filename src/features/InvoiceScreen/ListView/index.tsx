@@ -53,59 +53,19 @@ class ListView extends React.Component<
     pose: 'closed',
   };
 
-  filterInvoices = (invoice: Invoice) => {
-    if (this.props.selectedDueDateCategory === DueDateCategory.ALL) {
-      return true;
-    }
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.UNPAID) {
-      return !invoice.paid;
-    }
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.PAID) {
-      return invoice.paid;
-    }
-
-    if (invoice.paid) return false;
-
-    const now = moment();
-    const dueDate = moment(invoice.dueDate);
-    const diff = Math.ceil(
-      moment.duration(dueDate.startOf('day').diff(now.startOf('day'))).asDays()
-    );
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.TODAY) {
-      return diff <= 1;
-    }
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.NEXT_5_DAYS) {
-      return diff <= 5;
-    }
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.NEXT_20_DAYS) {
-      return diff <= 20;
-    }
-
-    if (this.props.selectedDueDateCategory === DueDateCategory.LATER) {
-      return diff > 20;
-    }
-  };
-
-  filterInvoicesByKeyword = (invoice: Invoice) => {
-    if (this.props.filterString.trim().length === 0) return true;
-    return (
-      invoice.companyName
-        .toLowerCase()
-        .indexOf(this.props.filterString.toLowerCase()) !== -1
-    );
-  };
-
   debouncedSearch = _.debounce(this.props.filterByKeyword, 100);
 
   componentDidMount() {
     this.setState({
       pose: 'open',
     });
+  }
+
+  componentDidUpdate() {
+    const invoices = this.props.invoices;
+    if (!invoices.find(inv => inv.id === this.props.selectedInvoiceId)) {
+      this.props.unselectInvoice(String(this.props.selectedInvoiceId));
+    }
   }
 
   render() {
@@ -137,20 +97,17 @@ class ListView extends React.Component<
           </FirstItemContainer>
         </li>
         <Parent pose={this.state.pose}>
-          {_.sortBy(
-            this.props.invoices
-              .filter(this.filterInvoices)
-              .filter(this.filterInvoicesByKeyword),
-            ['dueDate', 'companyName']
-          ).map(invoice => (
-            <ListViewElement
-              onClick={this.props.selectInvoice}
-              selected={this.props.selectedInvoiceId === invoice.id}
-              filterKeyword={this.props.filterString}
-              key={invoice.id}
-              {...invoice}
-            />
-          ))}
+          {_.sortBy(this.props.invoices, ['dueDate', 'companyName']).map(
+            invoice => (
+              <ListViewElement
+                onClick={this.props.selectInvoice}
+                selected={this.props.selectedInvoiceId === invoice.id}
+                filterKeyword={this.props.filterString}
+                key={invoice.id}
+                {...invoice}
+              />
+            )
+          )}
         </Parent>
       </ul>
     );

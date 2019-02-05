@@ -5,13 +5,17 @@ import SidePane from './SidePane';
 import ListView from './ListView';
 import InvoiceView from './InvoiceView';
 
-import { InvoiceThunkDispatch } from './invoiceActions';
+import { InvoiceThunkDispatch, getInvoices } from './invoiceActions';
 
-import { COLORS } from '../../styles';
-
-interface ReduxDispatchProps {}
+interface ReduxDispatchProps {
+  getInvoices: () => void;
+}
 
 class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
+  componentDidMount() {
+    this.props.getInvoices();
+  }
+
   render() {
     return (
       <div className="pane-group">
@@ -40,7 +44,9 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
 
 const mapDispatchToProps = (
   dispatch: InvoiceThunkDispatch
-): ReduxDispatchProps => ({});
+): ReduxDispatchProps => ({
+  getInvoices: () => dispatch(getInvoices()),
+});
 
 export default connect(
   null,

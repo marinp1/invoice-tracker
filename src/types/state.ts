@@ -13,6 +13,7 @@ export interface AuthState {
 }
 
 export interface InvoiceState {
+  apiCallInProgress: boolean;
   filterString: string;
   selectedDueDateCategory: DueDateCategory;
   selectedCategories: Category[];

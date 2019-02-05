@@ -5,22 +5,11 @@ import { InvoiceState } from '../../types/state';
 import _ from 'lodash';
 
 const initialState: InvoiceState = {
+  apiCallInProgress: false,
   filterString: '',
   selectedDueDateCategory: DueDateCategory.ALL,
   selectedCategories: [],
-  invoices: [
-    {
-      id: 'demo',
-      amount: 4000,
-      dueDate: '2019-02-20',
-      reference: '213123',
-      companyName: 'Soccer',
-      iban: '',
-      message: null,
-      category: Category.Soccer,
-      paid: false,
-    },
-  ],
+  invoices: [],
   openInvoices: [],
   selectedInvoiceId: null,
 };
@@ -30,18 +19,30 @@ function appReducer(
   action: InvoiceAction
 ): InvoiceState {
   switch (action.type) {
-    case 'CREATE_INVOICE':
+    case 'START_API_CALL': {
       return {
         ...state,
-        invoices: [...state.invoices, action.invoice],
+        apiCallInProgress: true,
       };
-    case 'SAVE_INVOICE':
+    }
+    case 'END_API_CALL': {
       return {
         ...state,
-        invoices: state.invoices
-          .filter(inv => inv.id !== action.invoice.id)
-          .concat(action.invoice),
+        apiCallInProgress: false,
       };
+    }
+    case 'CLEAR_INVOICES': {
+      return {
+        ...state,
+        invoices: [],
+      };
+    }
+    case 'FETCH_INVOICES': {
+      return {
+        ...state,
+        invoices: action.invoices,
+      };
+    }
     case 'SELECT_DUE_DATE_CATEGORY':
       return {
         ...state,

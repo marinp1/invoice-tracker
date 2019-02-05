@@ -2,15 +2,35 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
 import AppState from '../../types/state';
 
+import API from '../Api';
+
 import {
   Invoice,
   OpenInvoice,
   Category,
   DueDateCategory,
+  FilterParameters,
 } from '../../types/invoice';
 
 import { v1 as uuidv1 } from 'uuid';
 import moment from 'moment';
+
+export interface StartApiCall {
+  type: 'START_API_CALL';
+}
+
+export interface EndApiCall {
+  type: 'END_API_CALL';
+}
+
+export interface FetchInvoices {
+  type: 'FETCH_INVOICES';
+  invoices: Invoice[];
+}
+
+export interface ClearInvoices {
+  type: 'CLEAR_INVOICES';
+}
 
 export interface CreateInvoice {
   type: 'CREATE_INVOICE';
@@ -24,18 +44,6 @@ export interface SaveInvoice {
 
 export interface DeleteInvoice {
   type: 'DELETE_INVOICE';
-}
-
-export interface FetchInvoices {
-  type: 'FETCH_INVOICES';
-}
-
-export interface MarkInvoiceAsPaid {
-  type: 'MARK_INVOICE_AS_PAID';
-}
-
-export interface EditInvoice {
-  type: 'EDIT_INVOICE';
 }
 
 export interface SelectInvoice {
@@ -59,11 +67,12 @@ export interface FilterInvoicesByKeyword {
 }
 
 export type InvoiceAction =
+  | StartApiCall
+  | EndApiCall
   | CreateInvoice
   | DeleteInvoice
   | FetchInvoices
-  | MarkInvoiceAsPaid
-  | EditInvoice
+  | ClearInvoices
   | SaveInvoice
   | SelectInvoice
   | UnselectInvoice
@@ -90,36 +99,84 @@ interface InvoiceFormData {
   paid: boolean;
 }
 
+export const getInvoices = (): InvoiceThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { selectedDueDateCategory, filterString } = state.invoice;
+
+  const parameters = {
+    filterString,
+    dueDateCategory: selectedDueDateCategory,
+  };
+
+  if (!state.auth.apiCallInProgress) {
+    dispatch({
+      type: 'START_API_CALL',
+    });
+    try {
+      dispatch({
+        type: 'CLEAR_INVOICES',
+      });
+      const invoices = await API.getInvoices(parameters);
+      dispatch({
+        type: 'FETCH_INVOICES',
+        invoices,
+      });
+    } catch (error) {
+      toast.error('Failed to retrieve invoices!');
+    }
+    dispatch({
+      type: 'END_API_CALL',
+    });
+  }
+};
+
 export const createInvoice = (
   data: InvoiceFormData
 ): InvoiceThunkResult<void> => async (dispatch, getState) => {
-  const invoice: Invoice = {
-    id: data.id,
-    amount: data.amount,
-    companyName: data.companyName.trim(),
-    category: data.category,
-    dueDate: moment(data.dueDate).format('YYYY-MM-DD'),
-    paid: data.paid,
-    iban: data.iban.trim().length > 0 ? data.iban.trim() : null,
-    reference: data.reference.trim().length > 0 ? data.reference.trim() : null,
-    message: data.message.trim().length > 0 ? data.message.trim() : null,
-  };
-  const invoices = getState().invoice.invoices;
-  const existing = invoices.find(inv => inv.id === data.id);
-  if (!existing) {
+  const state = getState();
+
+  if (!state.auth.apiCallInProgress) {
     dispatch({
-      type: 'CREATE_INVOICE',
-      invoice,
+      type: 'START_API_CALL',
     });
-    unselectInvoice(data.id)(dispatch, getState, undefined);
-    toast.success('Invoice created!');
-  } else {
+
+    const invoice: Invoice = {
+      id: data.id,
+      amount: data.amount,
+      companyName: data.companyName.trim(),
+      category: data.category,
+      dueDate: moment(data.dueDate).format('YYYY-MM-DD'),
+      paid: data.paid,
+      iban: data.iban.trim().length > 0 ? data.iban.trim() : null,
+      reference:
+        data.reference.trim().length > 0 ? data.reference.trim() : null,
+      message: data.message.trim().length > 0 ? data.message.trim() : null,
+    };
+
+    const { invoices } = state.invoice;
+    const existing = invoices.find(inv => inv.id === data.id);
+
+    try {
+      if (!existing) {
+        await API.createInvoice(invoice);
+        await getInvoices()(dispatch, getState, undefined);
+        toast.success('Invoice created!');
+      } else {
+        await API.saveInvoice(invoice);
+        await getInvoices()(dispatch, getState, undefined);
+        toast.info('Invoice saved!');
+      }
+      unselectInvoice(data.id)(dispatch, getState, undefined);
+    } catch (e) {
+      toast.error('Failed to save invoice');
+    }
+
     dispatch({
-      type: 'SAVE_INVOICE',
-      invoice,
+      type: 'END_API_CALL',
     });
-    unselectInvoice(data.id)(dispatch, getState, undefined);
-    toast.info('Invoice saved!');
   }
 };
 
@@ -180,11 +237,27 @@ export const unselectInvoice = (
 
 export const selectDueDateCategory = (
   dueDateCategory: DueDateCategory
-): InvoiceThunkResult<void> => (dispatch, getState) => {
-  dispatch({
-    type: 'SELECT_DUE_DATE_CATEGORY',
-    dueDateCategory,
-  });
+): InvoiceThunkResult<void> => async (dispatch, getState) => {
+  const state = getState();
+  if (
+    state.invoice.selectedDueDateCategory !== dueDateCategory &&
+    !state.invoice.apiCallInProgress
+  ) {
+    dispatch({
+      type: 'SELECT_DUE_DATE_CATEGORY',
+      dueDateCategory,
+    });
+
+    dispatch({
+      type: 'START_API_CALL',
+    });
+
+    await getInvoices()(dispatch, getState, undefined);
+
+    dispatch({
+      type: 'END_API_CALL',
+    });
+  }
 };
 
 export const filterInvoicesByKeyword = (

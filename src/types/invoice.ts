@@ -35,3 +35,8 @@ export type OpenInvoice = Invoice & {
   unsavedChanges: boolean;
   name: string;
 };
+
+export interface FilterParameters {
+  dueDateCategory: DueDateCategory;
+  filterString: string;
+}
