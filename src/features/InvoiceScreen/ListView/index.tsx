@@ -61,9 +61,12 @@ class ListView extends React.Component<
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: ReduxStateProps & ReduxDispatchProps) {
     const invoices = this.props.invoices;
-    if (!invoices.find(inv => inv.id === this.props.selectedInvoiceId)) {
+    if (
+      !invoices.find(inv => inv.id === this.props.selectedInvoiceId) &&
+      prevProps.invoices.find(inv => inv.id === this.props.selectedInvoiceId)
+    ) {
       this.props.unselectInvoice(String(this.props.selectedInvoiceId));
     }
   }

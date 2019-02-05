@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import posed, { PoseGroup } from 'react-pose';
+
 import {
   InvoiceThunkDispatch,
   unselectInvoice,
@@ -12,7 +14,22 @@ import AppState from '../../../types/state';
 
 import InvoiceForm from './InvoiceForm';
 
-import { COLORS } from '../../../styles';
+const InvoiceFormContainer = posed.div({
+  enter: {
+    y: 0,
+    opacity: 1,
+    delay: 100,
+    transition: {
+      y: { type: 'tween', ease: 'linear' },
+      default: { duration: 150 },
+    },
+  },
+  exit: {
+    y: -50,
+    opacity: 0,
+    transition: { duration: 150 },
+  },
+});
 
 type ReduxStateProps = {
   openInvoices: OpenInvoice[];
@@ -75,26 +92,29 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
       >
         <img src={require('./logo.png')} width="100%" />
       </div>
-      {props.openInvoices.length > 0 && selectedInvoice && (
-        <div
-          style={{
-            zIndex: 10,
-            padding: '1rem 2rem 1rem 2rem',
-            flexGrow: 1,
-          }}
-        >
-          {props.openInvoices.map(inv => (
-            <div
-              key={'form-' + inv.id}
-              style={{
-                display: inv.id === selectedInvoice.id ? 'block' : 'none',
-              }}
-            >
-              <InvoiceForm selectedInvoice={inv} formName={inv.id} />
-            </div>
-          ))}
-        </div>
-      )}
+      <PoseGroup>
+        {props.openInvoices.length > 0 && selectedInvoice && (
+          <InvoiceFormContainer
+            key="invoiceFormContainer"
+            style={{
+              zIndex: 10,
+              padding: '1rem 2rem 1rem 2rem',
+              flexGrow: 1,
+            }}
+          >
+            {props.openInvoices.map(inv => (
+              <div
+                key={'form-' + inv.id}
+                style={{
+                  display: inv.id === selectedInvoice.id ? 'block' : 'none',
+                }}
+              >
+                <InvoiceForm selectedInvoice={inv} formName={inv.id} />
+              </div>
+            ))}
+          </InvoiceFormContainer>
+        )}
+      </PoseGroup>
     </div>
   );
 };
