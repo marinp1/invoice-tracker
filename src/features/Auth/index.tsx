@@ -12,6 +12,7 @@ import LoadingScreen from '../Utils/LoadingScreen';
 import AppState from '../../types/state';
 
 import { Container, ButtonGroup, FormContainer } from './styled';
+import { AuthThunkDispatch, getCurrentUser } from './authActions';
 
 const Modal = posed.div({
   enter: {
@@ -38,7 +39,11 @@ interface ReduxStateProps {
   apiCallInProgress: boolean;
 }
 
-type Props = OwnProps & ReduxStateProps;
+interface ReduxDispatchProps {
+  getCurrentUser: () => void;
+}
+
+type Props = OwnProps & ReduxStateProps & ReduxDispatchProps;
 
 interface State {
   currentView: 'login' | 'signup';
@@ -77,6 +82,10 @@ class LoginScreen extends React.Component<Props, State> {
       }
     }
   };
+
+  componentWillMount() {
+    this.props.getCurrentUser();
+  }
 
   render() {
     return (
@@ -132,7 +141,13 @@ const mapStateToProps = (state: AppState): ReduxStateProps => ({
   apiCallInProgress: state.auth.apiCallInProgress,
 });
 
+const mapDispatchToProps = (
+  dispatch: AuthThunkDispatch
+): ReduxDispatchProps => ({
+  getCurrentUser: () => dispatch(getCurrentUser()),
+});
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(LoginScreen);

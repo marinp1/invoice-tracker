@@ -22,12 +22,11 @@ class App extends React.Component<Props> {
       <div className="window">
         <ToastContainer />
         <div className="window-content">
-          {<InvoiceScreen />}
-          {/*this.props.authState !== 'Welcome' ? (
+          {this.props.authState !== 'Welcome' ? (
             <LoginScreen authState={this.props.authState} />
           ) : (
             <InvoiceScreen />
-          )*/}
+          )}
         </div>
       </div>
     );

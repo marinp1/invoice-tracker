@@ -52,6 +52,33 @@ type AuthThunkResult<R> = ThunkAction<R, AppState, undefined, AuthAction>;
 
 export type AuthThunkDispatch = ThunkDispatch<AppState, undefined, AuthAction>;
 
+export const getCurrentUser = (): AuthThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      user: user,
+    });
+  } catch (e) {
+    // Do nothing
+  }
+};
+
+export const signOut = (): AuthThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  try {
+    await Auth.signOut();
+    window.location.reload();
+  } catch (e) {
+    toast.error('Sign out failed!');
+  }
+};
+
 type LoginContent = {
   username: string;
   password: string;

@@ -13,6 +13,7 @@
 		"aws-amplify": "^1.1.19",
 		"aws-amplify-react": "^2.3.0",
 		"electron-is-dev": "^0.3.0",
+		"electron-json-config": "^1.5.3",
 		"electron-publisher-s3": "^20.17.2",
 		"glamor": "^2.20.40",
 		"glamorous": "^5.0.0",

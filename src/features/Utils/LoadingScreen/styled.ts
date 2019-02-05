@@ -32,7 +32,7 @@ export const OceanDiv = glamorous.div(
     left: 0,
     background: '#015871',
     '& .wave': {
-      background: `url(${waveGraphic}) repeat-x;`,
+      background: `url(${waveGraphic}) repeat-x`,
       position: 'absolute',
       top: '-198px',
       width: '6400px',
