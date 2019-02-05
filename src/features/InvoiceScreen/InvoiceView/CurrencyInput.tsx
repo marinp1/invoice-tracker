@@ -4,6 +4,7 @@ import CurrencyInput from 'react-currency-input';
 interface Props {
   className: string;
   onChange: (val: number) => void;
+  initialValue: number;
 }
 
 interface State {
@@ -12,7 +13,7 @@ interface State {
 
 class CurrencyInputComponent extends React.Component<Props, State> {
   state: State = {
-    value: '0.00',
+    value: String(this.props.initialValue / 100),
   };
 
   componentDidMount() {

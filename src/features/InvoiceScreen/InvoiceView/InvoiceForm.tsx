@@ -23,7 +23,7 @@ const renderField: React.SFC<any> = ({
   label,
   type,
   Component,
-  meta: { touched, error, warning },
+  meta: { touched, error, warning, initial },
 }) => (
   <div className="form-group">
     <label
@@ -40,7 +40,11 @@ const renderField: React.SFC<any> = ({
         className="form-control"
       />
     ) : (
-      <Component onChange={input.onChange} className="form-control" />
+      <Component
+        onChange={input.onChange}
+        className="form-control"
+        initialValue={initial}
+      />
     )}
     {touched &&
       ((error && (
@@ -91,6 +95,8 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           component={props => (
             <Toggle
               onChange={props.input.onChange}
+              value={props.input.value}
+              initialValue={props.meta.initial}
               name="paid"
               label="Paid"
               {...props}
@@ -165,7 +171,18 @@ const mapStateToProps = (
   state: AppState | {},
   props: CustomProps | {}
 ): ConfigProps<InvoiceFormData, CustomProps> => ({
-  initialValues: {},
+  initialValues: {
+    companyName: (props as CustomProps).selectedInvoice.companyName || '',
+    paid: (props as CustomProps).selectedInvoice.paid || false,
+    reference: (props as CustomProps).selectedInvoice.reference || '',
+    message: (props as CustomProps).selectedInvoice.message || '',
+    iban: (props as CustomProps).selectedInvoice.iban || '',
+    category: (props as CustomProps).selectedInvoice.category || '',
+    amount: (props as CustomProps).selectedInvoice.amount || 0,
+    dueDate: (props as CustomProps).selectedInvoice.dueDate
+      ? new Date((props as CustomProps).selectedInvoice.dueDate)
+      : new Date(),
+  },
   form: (props as CustomProps).formName,
   touchOnChange: true,
   touchOnBlur: true,

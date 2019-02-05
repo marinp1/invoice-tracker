@@ -20,6 +20,7 @@ const options = () => [
 interface Props {
   onChange: (val: any) => void;
   className: string;
+  initialValue: string;
 }
 
 const groupStyles = {
@@ -27,14 +28,6 @@ const groupStyles = {
   alignItems: 'center',
   justifyContent: 'space-between',
 };
-
-interface DataEntry {
-  value: string;
-  label: string;
-  options: {
-    length: number;
-  };
-}
 
 const formatGroupLabel = (
   data: GroupType<{
@@ -70,6 +63,14 @@ const IconOption = (props: any) => (
   </components.Option>
 );
 
+const fetchInitial = (
+  initialValue: string,
+  options: { value: string; label: any }[]
+) => {
+  const filtered = options.filter(op => op.label === initialValue)[0];
+  return filtered || undefined;
+};
+
 const ListSelector: React.SFC<Props> = props => (
   <Select
     onChange={val =>
@@ -83,6 +84,7 @@ const ListSelector: React.SFC<Props> = props => (
       )
     }
     closeMenuOnSelect={true}
+    defaultValue={fetchInitial(props.initialValue, options()[0].options)}
     components={{ Option: IconOption }}
     options={options()}
     formatGroupLabel={formatGroupLabel}

@@ -5,6 +5,7 @@ import { DatePickerContainer } from './styled';
 
 interface Props {
   onChange: (val: any) => void;
+  initialValue: Date;
   className: string;
 }
 
@@ -14,7 +15,7 @@ interface State {
 
 class DatePickerComponent extends React.Component<Props, State> {
   state: State = {
-    date: new Date(),
+    date: this.props.initialValue,
   };
 
   componentDidMount = () => {

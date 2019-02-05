@@ -7,50 +7,35 @@ interface Props {
   onChange: (val: any) => void;
   name: string;
   label: string;
+  initialValue: boolean;
+  value: boolean;
 }
 
-interface State {
-  checked: boolean;
-}
-
-class ToggleComponent extends React.Component<Props, State> {
-  state: State = {
-    checked: false,
+const ToggleComponent: React.SFC<Props> = props => {
+  const handleChange = (checked: boolean) => {
+    props.onChange(checked);
   };
 
-  componentDidMount() {
-    this.props.onChange(this.state.checked);
-  }
-
-  handleChange = (checked: boolean) => {
-    this.setState({ checked });
-    this.props.onChange(checked);
-  };
-
-  render() {
-    return (
-      <div
-        style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}
+  return (
+    <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-end' }}>
+      <label
+        htmlFor={props.name}
+        style={{
+          color: COLORS.MAIN_BLACK,
+          fontSize: '110%',
+          fontWeight: 'bold',
+          marginBottom: '2px',
+          marginRight: '1rem',
+        }}
       >
-        <label
-          htmlFor={this.props.name}
-          style={{
-            color: COLORS.MAIN_BLACK,
-            fontSize: '110%',
-            fontWeight: 'bold',
-            marginBottom: '2px',
-            marginRight: '1rem',
-          }}
-        >
-          {this.props.label}
-        </label>
-        <Toggle
-          checked={this.state.checked}
-          onChange={ev => this.handleChange(ev.target.checked)}
-        />
-      </div>
-    );
-  }
-}
+        {props.label}
+      </label>
+      <Toggle
+        checked={!!props.value}
+        onChange={ev => handleChange(ev.target.checked)}
+      />
+    </div>
+  );
+};
 
 export default ToggleComponent;
