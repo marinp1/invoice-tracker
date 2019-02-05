@@ -5,13 +5,14 @@ import { InvoiceState } from '../../types/state';
 import _ from 'lodash';
 
 const initialState: InvoiceState = {
-  apiCallInProgress: false,
+  apiCallsInProgress: 0,
   filterString: '',
   selectedDueDateCategory: DueDateCategory.ALL,
   selectedCategories: [],
   invoices: [],
   openInvoices: [],
   selectedInvoiceId: null,
+  selectedKeyword: '',
 };
 
 function appReducer(
@@ -22,13 +23,13 @@ function appReducer(
     case 'START_API_CALL': {
       return {
         ...state,
-        apiCallInProgress: true,
+        apiCallsInProgress: state.apiCallsInProgress + 1,
       };
     }
     case 'END_API_CALL': {
       return {
         ...state,
-        apiCallInProgress: false,
+        apiCallsInProgress: Math.max(0, state.apiCallsInProgress - 1),
       };
     }
     case 'CLEAR_INVOICES': {
@@ -41,6 +42,7 @@ function appReducer(
       return {
         ...state,
         invoices: action.invoices,
+        selectedKeyword: action.selectedKeyword,
       };
     }
     case 'SELECT_DUE_DATE_CATEGORY':

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import posed, { PoseGroup } from 'react-pose';
 
 import SidePane from './SidePane';
 import ListView from './ListView';
@@ -17,31 +16,15 @@ interface ReduxDispatchProps {
 }
 
 interface ReduxStateProps {
-  apiCallInProgress: boolean;
-}
-
-interface State {
-  loading: boolean;
+  apiCallsInProgress: number;
+  searchInProgress: boolean;
 }
 
 class InvoiceScreen extends React.Component<
-  ReduxDispatchProps & ReduxStateProps,
-  State
+  ReduxDispatchProps & ReduxStateProps
 > {
-  state: State = {
-    loading: false,
-  };
-
   componentDidMount() {
     this.props.getInvoices();
-  }
-
-  componentDidUpdate(prevProps: ReduxDispatchProps & ReduxStateProps) {
-    if (this.props.apiCallInProgress !== prevProps.apiCallInProgress) {
-      this.setState({
-        loading: this.props.apiCallInProgress,
-      });
-    }
   }
 
   render() {
@@ -56,7 +39,9 @@ class InvoiceScreen extends React.Component<
           }}
         >
           <LoadingScreen
-            visible={this.props.apiCallInProgress}
+            visible={
+              this.props.apiCallsInProgress !== 0 || this.props.searchInProgress
+            }
             text="Loading..."
             hideHeader
             theme="reversed"
@@ -82,7 +67,9 @@ class InvoiceScreen extends React.Component<
 }
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
-  apiCallInProgress: state.invoice.apiCallInProgress,
+  apiCallsInProgress: state.invoice.apiCallsInProgress,
+  searchInProgress:
+    state.invoice.selectedKeyword !== state.invoice.filterString,
 });
 
 const mapDispatchToProps = (

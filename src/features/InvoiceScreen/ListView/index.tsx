@@ -26,7 +26,8 @@ interface ReduxStateProps {
   selectedInvoiceId: string | null;
   invoices: Invoice[];
   filterString: string;
-  apiCallInProgress: boolean;
+  apiCallsInProgress: number;
+  searchInProgress: boolean;
 }
 
 interface ReduxDispatchProps {
@@ -101,30 +102,33 @@ class ListView extends React.Component<
             </CustomButton>
           </FirstItemContainer>
         </li>
-        {this.props.invoices.length === 0 && !this.props.apiCallInProgress && (
-          <div
-            style={{
-              position: 'absolute',
-              display: 'flex',
-              flexDirection: 'column',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <h1 style={{ marginBottom: '4rem', color: 'rgba(0,0,0,0.07)' }}>
-              NO RESULTS
-            </h1>
-            <FontAwesomeIcon
-              icon={Icons.faBoxOpen}
-              size="10x"
-              style={{ color: 'rgba(0, 0, 0, 0.03)' }}
-            />
-          </div>
-        )}
+        {this.props.invoices.length === 0 &&
+          this.props.apiCallsInProgress === 0 &&
+          !this.props.searchInProgress && (
+            <div
+              style={{
+                position: 'absolute',
+                display: 'flex',
+                flexDirection: 'column',
+                top: 0,
+                zIndex: -1,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <h1 style={{ marginBottom: '4rem', color: 'rgba(0,0,0,0.07)' }}>
+                NO RESULTS
+              </h1>
+              <FontAwesomeIcon
+                icon={Icons.faBoxOpen}
+                size="10x"
+                style={{ color: 'rgba(0, 0, 0, 0.03)' }}
+              />
+            </div>
+          )}
         <Parent pose={this.state.pose}>
           {_.sortBy(this.props.invoices, ['dueDate', 'companyName']).map(
             invoice => (
@@ -144,7 +148,9 @@ class ListView extends React.Component<
 }
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
-  apiCallInProgress: state.invoice.apiCallInProgress,
+  apiCallsInProgress: state.invoice.apiCallsInProgress,
+  searchInProgress:
+    state.invoice.selectedKeyword !== state.invoice.filterString,
   selectedDueDateCategory: state.invoice.selectedDueDateCategory,
   invoices: state.invoice.invoices,
   filterString: state.invoice.filterString,

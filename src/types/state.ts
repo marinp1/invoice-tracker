@@ -13,13 +13,14 @@ export interface AuthState {
 }
 
 export interface InvoiceState {
-  apiCallInProgress: boolean;
+  apiCallsInProgress: number;
   filterString: string;
   selectedDueDateCategory: DueDateCategory;
   selectedCategories: Category[];
   invoices: Invoice[];
   openInvoices: OpenInvoice[];
   selectedInvoiceId: string | null;
+  selectedKeyword: string;
 }
 
 interface AppState {

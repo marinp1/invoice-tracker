@@ -1,5 +1,6 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 import AppState from '../../types/state';
 
 import API from '../Api';
@@ -26,6 +27,7 @@ export interface EndApiCall {
 export interface FetchInvoices {
   type: 'FETCH_INVOICES';
   invoices: Invoice[];
+  selectedKeyword: string;
 }
 
 export interface ClearInvoices {
@@ -111,7 +113,7 @@ export const getInvoices = (): InvoiceThunkResult<void> => async (
     dueDateCategory: selectedDueDateCategory,
   };
 
-  if (!state.auth.apiCallInProgress) {
+  if (state.invoice.apiCallsInProgress === 0) {
     dispatch({
       type: 'START_API_CALL',
     });
@@ -123,6 +125,7 @@ export const getInvoices = (): InvoiceThunkResult<void> => async (
       dispatch({
         type: 'FETCH_INVOICES',
         invoices,
+        selectedKeyword: filterString,
       });
     } catch (error) {
       toast.error('Failed to retrieve invoices!');
@@ -138,7 +141,7 @@ export const createInvoice = (
 ): InvoiceThunkResult<void> => async (dispatch, getState) => {
   const state = getState();
 
-  if (!state.auth.apiCallInProgress) {
+  if (state.invoice.apiCallsInProgress === 0) {
     dispatch({
       type: 'START_API_CALL',
     });
@@ -241,30 +244,32 @@ export const selectDueDateCategory = (
   const state = getState();
   if (
     state.invoice.selectedDueDateCategory !== dueDateCategory &&
-    !state.invoice.apiCallInProgress
+    state.invoice.apiCallsInProgress === 0
   ) {
     dispatch({
       type: 'SELECT_DUE_DATE_CATEGORY',
       dueDateCategory,
     });
-
-    dispatch({
-      type: 'START_API_CALL',
-    });
-
     await getInvoices()(dispatch, getState, undefined);
-
-    dispatch({
-      type: 'END_API_CALL',
-    });
   }
 };
 
 export const filterInvoicesByKeyword = (
   keyword: string
-): InvoiceThunkResult<void> => (dispatch, getState) => {
+): InvoiceThunkResult<void> => async (dispatch, getState) => {
+  const debouncedGetInvoices = _.debounce(
+    () => getInvoices()(dispatch, getState, undefined),
+    500
+  );
+
   dispatch({
     type: 'FILTER_INVOICES_BY_KEYWORD',
     keyword,
   });
+
+  dispatch({
+    type: 'CLEAR_INVOICES',
+  });
+
+  await debouncedGetInvoices();
 };
