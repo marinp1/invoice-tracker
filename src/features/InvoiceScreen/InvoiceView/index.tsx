@@ -83,6 +83,7 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
         >
           {props.openInvoices.map(inv => (
             <div
+              key={'form-' + inv.id}
               style={{
                 display: inv.id === selectedInvoice.id ? 'block' : 'none',
               }}

@@ -6,6 +6,7 @@ import DatePicker from './DatePicker';
 import ListSelector from './ListSelector';
 import IbanInput from './IbanInput';
 import CurrencyInput from './CurrencyInput';
+import Toggle from './Toggle';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
@@ -85,6 +86,17 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
   return (
     <React.Fragment>
       <form onSubmit={props.handleSubmit}>
+        <Field
+          name="paid"
+          component={props => (
+            <Toggle
+              onChange={props.input.onChange}
+              name="paid"
+              label="Paid"
+              {...props}
+            />
+          )}
+        />
         <Field
           name="companyName"
           type="text"
