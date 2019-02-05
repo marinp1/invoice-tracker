@@ -84,9 +84,10 @@ class LoginScreen extends React.Component<Props, State> {
         <PoseGroup>
           {this.state.isVisible && (
             <Modal key="dialog" className="dialogContainer">
-              {this.props.apiCallInProgress && (
-                <LoadingScreen text={this.mapStateToText()} />
-              )}
+              <LoadingScreen
+                visible={this.props.apiCallInProgress}
+                text={this.mapStateToText()}
+              />
               <h1>INVOICE TRACKER</h1>
               <ButtonGroup>
                 <CustomButton

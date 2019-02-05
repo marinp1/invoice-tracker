@@ -18,28 +18,40 @@ const wave = glamorCss.keyframes({
 
 const waveGraphic = require('./wave.svg');
 
-export const OceanDiv = glamorous.div({
-  height: '5%',
-  width: '100%',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  background: '#015871',
-  '& .wave': {
-    background: `url(${waveGraphic}) repeat-x;`,
+export interface OceanThemeObject {
+  transform: string;
+  top: number;
+  bottom: number;
+}
+
+export const OceanDiv = glamorous.div(
+  {
+    height: '5%',
+    width: '100%',
     position: 'absolute',
-    top: '-198px',
-    width: '6400px',
-    height: '198px',
-    animation: `${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite`,
-    transform: 'translate3d(0, 0, 0)',
+    left: 0,
+    background: '#015871',
+    '& .wave': {
+      background: `url(${waveGraphic}) repeat-x;`,
+      position: 'absolute',
+      top: '-198px',
+      width: '6400px',
+      height: '198px',
+      animation: `${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite`,
+      transform: 'translate3d(0, 0, 0)',
+    },
+    '& .wave:nth-of-type(2)': {
+      top: '-175px',
+      animation: `${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, ${swell} 7s ease -1.25s infinite`,
+      opacity: 1,
+    },
   },
-  '& .wave:nth-of-type(2)': {
-    top: '-175px',
-    animation: `${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, ${swell} 7s ease -1.25s infinite`,
-    opacity: 1,
-  },
-});
+  ({ theme }: { theme: OceanThemeObject }) => ({
+    top: theme.top,
+    bottom: theme.bottom,
+    transform: theme.transform,
+  })
+);
 
 export const Wrapper = glamorous.div({
   zIndex: 999,

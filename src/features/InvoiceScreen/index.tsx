@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import posed, { PoseGroup } from 'react-pose';
 
 import SidePane from './SidePane';
 import ListView from './ListView';
@@ -7,13 +8,40 @@ import InvoiceView from './InvoiceView';
 
 import { InvoiceThunkDispatch, getInvoices } from './invoiceActions';
 
+import AppState from '../../types/state';
+
+import LoadingScreen from '../Utils/LoadingScreen';
+
 interface ReduxDispatchProps {
   getInvoices: () => void;
 }
 
-class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
+interface ReduxStateProps {
+  apiCallInProgress: boolean;
+}
+
+interface State {
+  loading: boolean;
+}
+
+class InvoiceScreen extends React.Component<
+  ReduxDispatchProps & ReduxStateProps,
+  State
+> {
+  state: State = {
+    loading: false,
+  };
+
   componentDidMount() {
     this.props.getInvoices();
+  }
+
+  componentDidUpdate(prevProps: ReduxDispatchProps & ReduxStateProps) {
+    if (this.props.apiCallInProgress !== prevProps.apiCallInProgress) {
+      this.setState({
+        loading: this.props.apiCallInProgress,
+      });
+    }
   }
 
   render() {
@@ -27,6 +55,17 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
             zIndex: 90,
           }}
         >
+          <LoadingScreen
+            visible={this.props.apiCallInProgress}
+            text="Loading..."
+            hideHeader
+            theme="reversed"
+            style={{
+              color: 'black',
+              background: 'initial',
+              marginTop: '3.5rem',
+            }}
+          />
           <ListView />
         </div>
         <div
@@ -42,6 +81,10 @@ class InvoiceScreen extends React.Component<ReduxDispatchProps, {}> {
   }
 }
 
+const mapStateToProps = (state: AppState): ReduxStateProps => ({
+  apiCallInProgress: state.invoice.apiCallInProgress,
+});
+
 const mapDispatchToProps = (
   dispatch: InvoiceThunkDispatch
 ): ReduxDispatchProps => ({
@@ -49,6 +92,6 @@ const mapDispatchToProps = (
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(InvoiceScreen);
