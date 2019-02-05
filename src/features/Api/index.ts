@@ -23,12 +23,10 @@ let invoices: Invoice[] = [
   },
 ];
 
-const wait = async (ms: number = 500) =>
+const wait = async (ms: number = 200) =>
   new Promise(resolve => setTimeout(() => resolve(true), ms));
 
 const getInvoices = async (params: FilterParameters) => {
-  await wait(500);
-
   const filterInvoices = (invoice: Invoice) => {
     if (params.dueDateCategory === DueDateCategory.ALL) {
       return true;
@@ -80,21 +78,21 @@ const getInvoices = async (params: FilterParameters) => {
     .filter(filterInvoices)
     .filter(filterInvoicesByKeyword);
 
+  await wait();
+
   return Promise.resolve(result);
 };
 
 const createInvoice = async (invoice: Invoice) => {
-  await wait(500);
   if (invoice.amount < 1)
     throw new Error('Invoice amount should be at least 0,01 €');
   invoices.push(invoice);
-  return Promise.resolve(true);
+  await wait();
 };
 
 const saveInvoice = async (invoice: Invoice) => {
-  await wait(500);
-  invoices = invoices.filter(inv => inv.id === invoice.id).concat(invoice);
-  return Promise.resolve(true);
+  invoices = invoices.filter(inv => inv.id !== invoice.id).concat(invoice);
+  await wait();
 };
 
 export default {

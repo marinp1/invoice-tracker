@@ -18,7 +18,6 @@ const InvoiceFormContainer = posed.div({
   enter: {
     y: 0,
     opacity: 1,
-    delay: 100,
     transition: {
       y: { type: 'tween', ease: 'linear' },
       default: { duration: 150 },

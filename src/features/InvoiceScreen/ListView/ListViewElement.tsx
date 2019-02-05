@@ -18,7 +18,10 @@ const largeIconCss = glamor.css({
 });
 
 const LargeIcon: React.SFC<{ iconName: IconDefinition }> = ({ iconName }) => (
-  <div className={`img-circle media-object pull-left ${largeIconCss} `}>
+  <div
+    className={`img-circle media-object pull-left ${largeIconCss} `}
+    style={{ cursor: 'pointer' }}
+  >
     <FontAwesomeIcon icon={iconName} fixedWidth />
   </div>
 );
@@ -115,9 +118,10 @@ const InvoiceListElement: React.SFC<
         props.paid
       )}`}
       onClick={() => props.onClick(props.id)}
+      style={{ cursor: 'pointer' }}
     >
       <LargeIcon iconName={categoryToIcon(props.category)} />
-      <div className="media-body">
+      <div className="media-body" style={{ cursor: 'pointer !important' }}>
         {props.filterKeyword.trim().length > 0 ? (
           filteredTitle()
         ) : (

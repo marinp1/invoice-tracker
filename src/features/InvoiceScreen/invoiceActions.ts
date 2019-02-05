@@ -165,21 +165,26 @@ export const createInvoice = (
     try {
       if (!existing) {
         await API.createInvoice(invoice);
+        dispatch({
+          type: 'END_API_CALL',
+        });
         await getInvoices()(dispatch, getState, undefined);
         toast.success('Invoice created!');
       } else {
         await API.saveInvoice(invoice);
+        dispatch({
+          type: 'END_API_CALL',
+        });
         await getInvoices()(dispatch, getState, undefined);
         toast.info('Invoice saved!');
       }
       unselectInvoice(data.id)(dispatch, getState, undefined);
     } catch (e) {
       toast.error('Failed to save invoice');
+      dispatch({
+        type: 'END_API_CALL',
+      });
     }
-
-    dispatch({
-      type: 'END_API_CALL',
-    });
   }
 };
 
