@@ -72,26 +72,37 @@ export type InvoiceThunkDispatch = ThunkDispatch<
   InvoiceAction
 >;
 
-// FIXME: invoice as param
-export const createInvoice = (): InvoiceThunkResult<void> => async (
-  dispatch,
-  getState
-) => {
+interface InvoiceFormData {
+  id: string;
+  companyName: string;
+  iban: string;
+  reference: string;
+  message: string;
+  category: Category;
+  dueDate: Date;
+  amount: number;
+  paid: boolean;
+}
+
+export const createInvoice = (
+  data: InvoiceFormData
+): InvoiceThunkResult<void> => async (dispatch, getState) => {
   const invoice: Invoice = {
-    id: uuidv1(),
-    amount: Math.random() * 5400 + 600,
-    companyName: Math.random() > 0.5 ? 'Random company' : 'Satunnainen yritys',
-    category: Category.Electricity,
-    dueDate: '2020-02-16',
-    paid: Math.random() > 0.5,
-    iban: null,
-    reference: null,
-    message: null,
+    id: data.id,
+    amount: data.amount,
+    companyName: data.companyName.trim(),
+    category: data.category,
+    dueDate: moment(data.dueDate).format('YYYY-MM-DD'),
+    paid: data.paid,
+    iban: data.iban.trim().length > 0 ? data.iban.trim() : null,
+    reference: data.reference.trim().length > 0 ? data.reference.trim() : null,
+    message: data.message.trim().length > 0 ? data.message.trim() : null,
   };
   dispatch({
     type: 'CREATE_INVOICE',
     invoice,
   });
+  unselectInvoice(data.id)(dispatch, getState, undefined);
   toast.success('Invoice created!');
 };
 

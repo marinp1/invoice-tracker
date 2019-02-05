@@ -1,11 +1,11 @@
 import React from 'react';
 import Select from 'react-select';
-import { Category } from '../../../types/invoice';
+import { Category } from '../../../../types/invoice';
 import { GroupType } from 'react-select/lib/types';
 import { components } from 'react-select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { categoryToIcon } from '../../../utils';
+import { categoryToIcon } from '../../../../utils';
 
 const options = () => [
   {

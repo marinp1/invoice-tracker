@@ -2,15 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, reduxForm, ConfigProps } from 'redux-form';
 
-import DatePicker from './DatePicker';
-import ListSelector from './ListSelector';
-import IbanInput from './IbanInput';
-import CurrencyInput from './CurrencyInput';
-import Toggle from './Toggle';
+import DatePicker from './Components/DatePicker';
+import ListSelector from './Components/ListSelector';
+import IbanInput from './Components/IbanInput';
+import CurrencyInput from './Components/CurrencyInput';
+import Toggle from './Components/Toggle';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
-import { InvoiceThunkDispatch } from '../invoiceActions';
+import { InvoiceThunkDispatch, createInvoice } from '../invoiceActions';
 import validate from './validate';
 
 import { OpenInvoice, Category } from '../../../types/invoice';
@@ -65,7 +65,7 @@ export interface InvoiceFormData {
   iban: string;
   reference: string;
   message: string;
-  category: string;
+  category: Category;
   dueDate: Date;
   amount: number;
   paid: boolean;
@@ -177,7 +177,7 @@ const mapStateToProps = (
     reference: (props as CustomProps).selectedInvoice.reference || '',
     message: (props as CustomProps).selectedInvoice.message || '',
     iban: (props as CustomProps).selectedInvoice.iban || '',
-    category: (props as CustomProps).selectedInvoice.category || '',
+    category: (props as CustomProps).selectedInvoice.category || Category.Misc,
     amount: (props as CustomProps).selectedInvoice.amount || 0,
     dueDate: (props as CustomProps).selectedInvoice.dueDate
       ? new Date((props as CustomProps).selectedInvoice.dueDate)
@@ -195,10 +195,12 @@ function mapDispatchToProps(dispatch: InvoiceThunkDispatch): DispatchProps {
       dispatch: InvoiceThunkDispatch,
       props: CustomProps
     ) => {
-      /*
-      dispatch(signUp(formData));
-      */
-      console.log(formData);
+      dispatch(
+        createInvoice({
+          id: (props as CustomProps).selectedInvoice.id,
+          ...formData,
+        })
+      );
     },
   };
 }

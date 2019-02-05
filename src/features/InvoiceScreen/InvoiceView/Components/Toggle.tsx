@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
-import { COLORS } from '../../../styles';
+import { COLORS } from '../../../../styles';
 
 interface Props {
   onChange: (val: any) => void;
