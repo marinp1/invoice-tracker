@@ -35,6 +35,13 @@ function appReducer(
         ...state,
         invoices: [...state.invoices, action.invoice],
       };
+    case 'SAVE_INVOICE':
+      return {
+        ...state,
+        invoices: state.invoices
+          .filter(inv => inv.id !== action.invoice.id)
+          .concat(action.invoice),
+      };
     case 'SELECT_DUE_DATE_CATEGORY':
       return {
         ...state,

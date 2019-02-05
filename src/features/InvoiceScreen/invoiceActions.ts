@@ -17,6 +17,11 @@ export interface CreateInvoice {
   invoice: Invoice;
 }
 
+export interface SaveInvoice {
+  type: 'SAVE_INVOICE';
+  invoice: Invoice;
+}
+
 export interface DeleteInvoice {
   type: 'DELETE_INVOICE';
 }
@@ -59,6 +64,7 @@ export type InvoiceAction =
   | FetchInvoices
   | MarkInvoiceAsPaid
   | EditInvoice
+  | SaveInvoice
   | SelectInvoice
   | UnselectInvoice
   | SelectDueDateCategory
@@ -98,12 +104,23 @@ export const createInvoice = (
     reference: data.reference.trim().length > 0 ? data.reference.trim() : null,
     message: data.message.trim().length > 0 ? data.message.trim() : null,
   };
-  dispatch({
-    type: 'CREATE_INVOICE',
-    invoice,
-  });
-  unselectInvoice(data.id)(dispatch, getState, undefined);
-  toast.success('Invoice created!');
+  const invoices = getState().invoice.invoices;
+  const existing = invoices.find(inv => inv.id === data.id);
+  if (!existing) {
+    dispatch({
+      type: 'CREATE_INVOICE',
+      invoice,
+    });
+    unselectInvoice(data.id)(dispatch, getState, undefined);
+    toast.success('Invoice created!');
+  } else {
+    dispatch({
+      type: 'SAVE_INVOICE',
+      invoice,
+    });
+    unselectInvoice(data.id)(dispatch, getState, undefined);
+    toast.info('Invoice saved!');
+  }
 };
 
 export const createTemporaryInvoice = (): InvoiceThunkResult<void> => async (

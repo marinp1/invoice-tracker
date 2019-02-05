@@ -17,7 +17,7 @@ class CurrencyInputComponent extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.props.onChange(0);
+    this.props.onChange(this.props.initialValue);
   }
 
   handleChange = (event: any, maskedValue: any, floatValue: any) => {
