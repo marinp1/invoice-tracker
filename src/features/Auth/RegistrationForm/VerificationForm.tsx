@@ -84,7 +84,6 @@ function mapDispatchToProps(dispatch: AuthThunkDispatch): DispatchProps {
       props: CustomProps
     ) => {
       dispatch(verifyAccount(formData));
-      console.log(formData);
     },
   };
 }

@@ -20,7 +20,7 @@ type ReduxStateProps = {
 };
 
 type ReduxDispatchProps = {
-  selectInvoice: (id: string) => void;
+  selectInvoice: (id: string, selectedInvoiceId: string | null) => void;
   closeInvoice: (id: string) => void;
 };
 
@@ -43,7 +43,9 @@ const InvoiceView: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => {
           {props.openInvoices.map(inv => (
             <div
               key={inv.id}
-              onClick={() => props.selectInvoice(inv.id)}
+              onClick={() =>
+                props.selectInvoice(inv.id, props.selectedInvoiceId)
+              }
               className={`tab-item${
                 inv.id === props.selectedInvoiceId ? ' active' : ''
               }`}
@@ -105,8 +107,10 @@ const mapStateToProps = (state: AppState): ReduxStateProps => ({
 const mapDispatchToProps = (
   dispatch: InvoiceThunkDispatch
 ): ReduxDispatchProps => ({
-  selectInvoice: (id: string) => {
-    dispatch(selectInvoice(id));
+  selectInvoice: (id: string, selectedInvoiceId: string | null) => {
+    if (id !== selectedInvoiceId) {
+      dispatch(selectInvoice(id));
+    }
   },
   closeInvoice: (id: string) => {
     dispatch(unselectInvoice(id));

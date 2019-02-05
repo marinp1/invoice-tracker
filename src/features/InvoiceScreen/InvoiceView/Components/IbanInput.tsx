@@ -4,6 +4,7 @@ import IBAN from 'iban';
 interface Props {
   className: string;
   onChange: (val: string) => void;
+  initialValue: string;
 }
 
 interface State {
@@ -12,7 +13,7 @@ interface State {
 
 class IbanInput extends React.Component<Props, State> {
   state: State = {
-    val: '',
+    val: this.props.initialValue,
   };
 
   handleChange = (val: string) => {
