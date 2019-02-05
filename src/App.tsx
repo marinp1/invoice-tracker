@@ -11,7 +11,6 @@ import LoginScreen from './features/Auth';
 import InvoiceScreen from './features/InvoiceScreen';
 import AppState from './types/state';
 import { AuthStateType } from './types';
-import { COLORS } from './styles';
 
 interface Props {
   authState: AuthStateType;
@@ -23,7 +22,7 @@ class App extends React.Component<Props> {
       <div className="window">
         <ToastContainer />
         <div className="window-content">
-          <InvoiceScreen />
+          {<InvoiceScreen />}
           {/*this.props.authState !== 'Welcome' ? (
             <LoginScreen authState={this.props.authState} />
           ) : (

@@ -19,6 +19,8 @@ export enum DueDateCategory {
   PAID = 'Paid',
 }
 
+export type CountMapType = Partial<{ [category in DueDateCategory]: number }>;
+
 export interface Invoice {
   id: string;
   category: Category;

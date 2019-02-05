@@ -1,9 +1,11 @@
 import { AuthStateType } from './index';
+
 import {
   Invoice,
   OpenInvoice,
   Category,
   DueDateCategory,
+  CountMapType,
 } from '../types/invoice';
 
 export interface AuthState {
@@ -21,6 +23,7 @@ export interface InvoiceState {
   openInvoices: OpenInvoice[];
   selectedInvoiceId: string | null;
   selectedKeyword: string;
+  countMap: CountMapType;
 }
 
 interface AppState {

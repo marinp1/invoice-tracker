@@ -1,13 +1,14 @@
 // Temporary api mockup
 
-import moment from 'moment';
-
 import {
   Invoice,
   DueDateCategory,
   Category,
   FilterParameters,
+  CountMapType,
 } from '../../types/invoice';
+
+import { filterInvoices } from '../../utils';
 
 let invoices: Invoice[] = [
   {
@@ -23,48 +24,10 @@ let invoices: Invoice[] = [
   },
 ];
 
-const wait = async (ms: number = 200) =>
+const wait = async (ms: number = 500) =>
   new Promise(resolve => setTimeout(() => resolve(true), ms));
 
 const getInvoices = async (params: FilterParameters) => {
-  const filterInvoices = (invoice: Invoice) => {
-    if (params.dueDateCategory === DueDateCategory.ALL) {
-      return true;
-    }
-
-    if (params.dueDateCategory === DueDateCategory.UNPAID) {
-      return !invoice.paid;
-    }
-
-    if (params.dueDateCategory === DueDateCategory.PAID) {
-      return invoice.paid;
-    }
-
-    if (invoice.paid) return false;
-
-    const now = moment();
-    const dueDate = moment(invoice.dueDate);
-    const diff = Math.ceil(
-      moment.duration(dueDate.startOf('day').diff(now.startOf('day'))).asDays()
-    );
-
-    if (params.dueDateCategory === DueDateCategory.TODAY) {
-      return diff <= 1;
-    }
-
-    if (params.dueDateCategory === DueDateCategory.NEXT_5_DAYS) {
-      return diff <= 5;
-    }
-
-    if (params.dueDateCategory === DueDateCategory.NEXT_20_DAYS) {
-      return diff <= 20;
-    }
-
-    if (params.dueDateCategory === DueDateCategory.LATER) {
-      return diff > 20;
-    }
-  };
-
   const filterInvoicesByKeyword = (invoice: Invoice) => {
     if (params.filterString.trim().length === 0) return true;
     return (
@@ -75,12 +38,20 @@ const getInvoices = async (params: FilterParameters) => {
   };
 
   const result = invoices
-    .filter(filterInvoices)
+    .filter(inv => filterInvoices(params.dueDateCategory, inv))
     .filter(filterInvoicesByKeyword);
+
+  const countMap: CountMapType = {};
+  Object.values(DueDateCategory).forEach((val: DueDateCategory) => {
+    countMap[val] = invoices.filter(inv => filterInvoices(val, inv)).length;
+  });
 
   await wait();
 
-  return Promise.resolve(result);
+  return Promise.resolve({
+    invoices: result,
+    countMap,
+  });
 };
 
 const createInvoice = async (invoice: Invoice) => {

@@ -1,4 +1,5 @@
-import { Category, DueDateCategory } from './types/invoice';
+import moment from 'moment';
+import { Category, DueDateCategory, Invoice } from './types/invoice';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import { COLORS } from './styles';
 
@@ -39,5 +40,46 @@ export const mapDueDateCategoryToColor = (dueDateCategory: DueDateCategory) => {
       return COLORS.DARK_BLUE;
     case DueDateCategory.PAID:
       return COLORS.GREEN;
+  }
+};
+
+export const filterInvoices = (
+  dueDateCategory: DueDateCategory,
+  invoice: Invoice
+) => {
+  if (dueDateCategory === DueDateCategory.ALL) {
+    return true;
+  }
+
+  if (dueDateCategory === DueDateCategory.UNPAID) {
+    return !invoice.paid;
+  }
+
+  if (dueDateCategory === DueDateCategory.PAID) {
+    return invoice.paid;
+  }
+
+  if (invoice.paid) return false;
+
+  const now = moment();
+  const dueDate = moment(invoice.dueDate);
+  const diff = Math.ceil(
+    moment.duration(dueDate.startOf('day').diff(now.startOf('day'))).asDays()
+  );
+
+  if (dueDateCategory === DueDateCategory.TODAY) {
+    return diff <= 1;
+  }
+
+  if (dueDateCategory === DueDateCategory.NEXT_5_DAYS) {
+    return diff <= 5;
+  }
+
+  if (dueDateCategory === DueDateCategory.NEXT_20_DAYS) {
+    return diff <= 20;
+  }
+
+  if (dueDateCategory === DueDateCategory.LATER) {
+    return diff > 20;
   }
 };

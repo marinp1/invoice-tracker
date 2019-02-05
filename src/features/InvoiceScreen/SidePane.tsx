@@ -4,7 +4,7 @@ import * as glamor from 'glamor';
 
 import { COLORS } from '../../styles';
 import { mapDueDateCategoryToColor } from '../../utils';
-import { DueDateCategory } from '../../types/invoice';
+import { DueDateCategory, CountMapType } from '../../types/invoice';
 import { PhotonIcon } from '../../types';
 import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
 import AppState from '../../types/state';
@@ -19,6 +19,7 @@ interface NavItemProps {
   selectedName: string;
   category: DueDateCategory;
   onClick: (sel: DueDateCategory) => void;
+  count: number | undefined;
 }
 
 const NavItem: React.SFC<NavItemProps> = props => (
@@ -27,17 +28,25 @@ const NavItem: React.SFC<NavItemProps> = props => (
     className={`nav-group-item${
       props.selectedName === props.category ? ' active' : ''
     }`}
+    style={{ paddingRight: '1rem' }}
   >
     <span
       className={PhotonIcon.Record}
       style={{ color: mapDueDateCategoryToColor(props.category) }}
     />
-    {props.category}
+    {props.count ? (
+      <span>
+        {props.category} ({props.count})
+      </span>
+    ) : (
+      <span style={{ color: '#999' }}>{props.category}</span>
+    )}
   </span>
 );
 
 interface ReduxStateProps {
   selectedDueDate: DueDateCategory;
+  countMap: CountMapType;
 }
 
 interface ReduxDispatchProps {
@@ -52,6 +61,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
       </h5>
       {Object.values(DueDateCategory).map((cat: DueDateCategory) => (
         <NavItem
+          count={props.countMap[cat]}
           key={cat}
           selectedName={props.selectedDueDate}
           category={cat}
@@ -64,6 +74,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
   selectedDueDate: state.invoice.selectedDueDateCategory,
+  countMap: state.invoice.countMap,
 });
 
 const mapDispatchToProps = (

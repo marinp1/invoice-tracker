@@ -1,5 +1,5 @@
 import { InvoiceAction } from './invoiceActions';
-import { DueDateCategory, Category } from './../../types/invoice';
+import { DueDateCategory } from './../../types/invoice';
 import { InvoiceState } from '../../types/state';
 
 import _ from 'lodash';
@@ -13,6 +13,7 @@ const initialState: InvoiceState = {
   openInvoices: [],
   selectedInvoiceId: null,
   selectedKeyword: '',
+  countMap: {},
 };
 
 function appReducer(
@@ -42,6 +43,7 @@ function appReducer(
       return {
         ...state,
         invoices: action.invoices,
+        countMap: action.countMap,
         selectedKeyword: action.selectedKeyword,
       };
     }

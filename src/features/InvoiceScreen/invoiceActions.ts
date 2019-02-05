@@ -10,7 +10,7 @@ import {
   OpenInvoice,
   Category,
   DueDateCategory,
-  FilterParameters,
+  CountMapType,
 } from '../../types/invoice';
 
 import { v1 as uuidv1 } from 'uuid';
@@ -27,6 +27,7 @@ export interface EndApiCall {
 export interface FetchInvoices {
   type: 'FETCH_INVOICES';
   invoices: Invoice[];
+  countMap: CountMapType;
   selectedKeyword: string;
 }
 
@@ -121,10 +122,11 @@ export const getInvoices = (): InvoiceThunkResult<void> => async (
       dispatch({
         type: 'CLEAR_INVOICES',
       });
-      const invoices = await API.getInvoices(parameters);
+      const result = await API.getInvoices(parameters);
       dispatch({
         type: 'FETCH_INVOICES',
-        invoices,
+        invoices: result.invoices,
+        countMap: result.countMap,
         selectedKeyword: filterString,
       });
     } catch (error) {
