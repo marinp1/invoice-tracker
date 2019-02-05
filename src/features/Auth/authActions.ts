@@ -107,14 +107,11 @@ export const login = (data: LoginContent): AuthThunkResult<void> => async (
     });
 
     try {
-      const result = await Auth.signIn({
+      await Auth.signIn({
         username: data.username,
         password: data.password,
       });
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        user: result.user,
-      });
+      getCurrentUser()(dispatch, getState, undefined);
     } catch (e) {
       toast.error(e.message);
     }

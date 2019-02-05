@@ -17,10 +17,11 @@ interface MenuItemProps {
   icon: IconDefinition;
   text: string;
   subtext?: string;
+  onClick?: () => void;
 }
 
 const MenuItem: React.SFC<MenuItemProps> = props => (
-  <MenuItemContainer>
+  <MenuItemContainer onClick={props.onClick}>
     <FontAwesomeIcon
       fixedWidth
       icon={props.icon}

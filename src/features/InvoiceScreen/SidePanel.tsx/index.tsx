@@ -7,6 +7,7 @@ import NavItem from './NavItem';
 import MenuItem from './MenuItem';
 
 import { InvoiceThunkDispatch, selectDueDateCategory } from '../invoiceActions';
+import { signOut } from '../../Auth/authActions';
 
 import { COLORS } from '../../../styles';
 
@@ -29,6 +30,7 @@ interface ReduxStateProps {
 
 interface ReduxDispatchProps {
   changeDueDateSelection: (sel: DueDateCategory) => void;
+  signOut: () => void;
 }
 
 const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
@@ -38,7 +40,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
   >
     <nav className="nav-group" style={{ flexGrow: 1 }}>
       <h5 className="nav-group-title" style={{ color: COLORS.PURE_BLACK }}>
-        Due date
+        Filters
       </h5>
       {Object.values(DueDateCategory).map((cat: DueDateCategory) => (
         <NavItem
@@ -61,7 +63,11 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
         }}
       >
         <MenuItem icon={Icons.faInfo} text="About" subtext="v0.1.0" />
-        <MenuItem icon={Icons.faSignOutAlt} text="Sign out" />
+        <MenuItem
+          icon={Icons.faSignOutAlt}
+          text="Sign out"
+          onClick={props.signOut}
+        />
         <MenuItem
           icon={Icons.faUserAstronaut}
           text={props.currentUser.attributes.email}
@@ -83,6 +89,9 @@ const mapDispatchToProps = (
 ): ReduxDispatchProps => ({
   changeDueDateSelection: (sel: DueDateCategory) => {
     dispatch(selectDueDateCategory(sel));
+  },
+  signOut: () => {
+    dispatch(signOut());
   },
 });
 
