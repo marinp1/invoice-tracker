@@ -4,6 +4,7 @@ import { Field, InjectedFormProps, reduxForm, ConfigProps } from 'redux-form';
 
 import DatePicker from './DatePicker';
 import ListSelector from './ListSelector';
+import IbanInput from './IbanInput';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
@@ -39,6 +40,7 @@ const renderField: React.SFC<any> = ({
     ) : (
       <Component onChange={input.onChange} className="form-control" />
     )}
+    {console.log(error, touched)}
     {touched &&
       ((error && (
         <span
@@ -55,6 +57,7 @@ const renderField: React.SFC<any> = ({
 
 export interface InvoiceFormData {
   companyName: string;
+  iban: string;
   category: string;
   dueDate: Date;
   amount: number;
@@ -84,6 +87,12 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           type="text"
           component={renderField}
           label="Recipient"
+        />
+        <Field
+          name="iban"
+          component={renderField}
+          label="IBAN"
+          Component={IbanInput}
         />
         <Field
           name="dueDate"
@@ -128,6 +137,8 @@ const mapStateToProps = (
 ): ConfigProps<InvoiceFormData, CustomProps> => ({
   initialValues: {},
   form: 'invoice-form',
+  touchOnChange: true,
+  touchOnBlur: true,
 });
 
 function mapDispatchToProps(dispatch: InvoiceThunkDispatch): DispatchProps {

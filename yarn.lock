@@ -1108,6 +1108,11 @@
     "@svgr/core" "^2.4.1"
     loader-utils "^1.1.0"
 
+"@types/iban@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@types/iban/-/iban-0.0.30.tgz#48a5d532487f69f92105ea057942bb6e39d86506"
+  integrity sha512-RdRxcqL1nuDq+6+LAhlzsr9Wig11wv1xMtKZJfQz/OTmkQTU23yKN91Xo1zkBuGzpr7CdZQBJ8WsJ1widkqBPQ==
+
 "@types/invariant@^2.2.29":
   version "2.2.29"
   resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.29.tgz#aa845204cd0a289f65d47e0de63a6a815e30cc66"
@@ -5681,6 +5686,11 @@ hyphenate-style-name@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.3.tgz#097bb7fa0b8f1a9cf0bd5c734cf95899981a9b48"
   integrity sha512-EcuixamT82oplpoJ2XU4pDtKGWQ7b00CD9f1ug9IaQ3p1bkHMiKCZ9ut9QDI6qsa6cpUuB+A/I+zLtdNK4n2DQ==
+
+iban@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/iban/-/iban-0.0.11.tgz#b67e642b6f1d96aa25e280fbc30ecd974c2fa073"
+  integrity sha512-9X0t/S+c6vBdgq3Hrt55HAonXfPmGuO/Vz507lXwQh+F5/0psvZWfh9jD14NvNYAfggk8WrYCWNvLVpCWLWdUQ==
 
 iconv-lite@0.4.23:
   version "0.4.23"

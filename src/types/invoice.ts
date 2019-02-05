@@ -26,6 +26,7 @@ export interface Invoice {
   amount: number; // cents
   dueDate: string;
   paid: boolean;
+  iban: string | null;
 }
 
 export type OpenInvoice = Invoice & {

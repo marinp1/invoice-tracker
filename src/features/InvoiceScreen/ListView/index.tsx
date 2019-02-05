@@ -127,6 +127,7 @@ class ListView extends React.Component<
               companyName={invoice.companyName}
               dueDate={invoice.dueDate}
               paid={invoice.paid}
+              iban={invoice.iban}
             />
           ))}
       </ul>

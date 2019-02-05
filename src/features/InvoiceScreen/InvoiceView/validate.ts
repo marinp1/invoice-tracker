@@ -1,8 +1,10 @@
+import IBAN from 'iban';
 import { InvoiceFormData } from './InvoiceForm';
 
 const validate = (values: InvoiceFormData) => {
   const errors: Partial<{
     companyName: string;
+    iban: string;
     category: string;
     dueDate: string;
     amount: string;
@@ -13,6 +15,10 @@ const validate = (values: InvoiceFormData) => {
     errors.companyName = 'Required';
   } else if (values.companyName.length > 64) {
     errors.companyName = 'Must be 64 characters or less';
+  }
+
+  if (values.iban && !IBAN.isValid(values.iban)) {
+    errors.iban = 'IBAN should be in valid format';
   }
 
   if (!values.amount) {
