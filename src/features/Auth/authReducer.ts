@@ -5,6 +5,7 @@ const initialState: AuthState = {
   apiCallInProgress: false,
   authState: 'SignIn',
   currentUser: null,
+  userAvatar: null,
 };
 
 function appReducer(
@@ -28,6 +29,11 @@ function appReducer(
         authState: 'Welcome',
         currentUser: action.user,
       };
+    case 'SET_AVATAR':
+      return {
+        ...state,
+        userAvatar: action.avatar,
+      };
     case 'SIGN_UP_SUCCESS':
       return {
         ...state,
@@ -38,6 +44,7 @@ function appReducer(
       return {
         ...state,
         currentUser: null,
+        userAvatar: null,
       };
     case 'CHANGE_AUTH_STATE':
       return {

@@ -1,5 +1,5 @@
 import { AuthStateType } from './index';
-import { CognitoUser } from 'amazon-cognito-identity-js';
+import { CognitoUser } from './auth';
 
 import {
   Invoice,
@@ -13,6 +13,7 @@ export interface AuthState {
   apiCallInProgress: boolean;
   authState: AuthStateType;
   currentUser: CognitoUser | null;
+  userAvatar: string | null;
 }
 
 export interface InvoiceState {

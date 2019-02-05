@@ -2,11 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as glamor from 'glamor';
 
+import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
+
 import { COLORS } from '../../styles';
 import { mapDueDateCategoryToColor } from '../../utils';
+
 import { DueDateCategory, CountMapType } from '../../types/invoice';
 import { PhotonIcon } from '../../types';
-import { InvoiceThunkDispatch, selectDueDateCategory } from './invoiceActions';
+import { CognitoUser } from '../../types/auth';
 import AppState from '../../types/state';
 
 const sidebarTheme = glamor.css({
@@ -46,6 +49,8 @@ const NavItem: React.SFC<NavItemProps> = props => (
 
 interface ReduxStateProps {
   selectedDueDate: DueDateCategory;
+  currentUser: CognitoUser | null;
+  userAvatar: string | null;
   countMap: CountMapType;
 }
 
@@ -54,8 +59,11 @@ interface ReduxDispatchProps {
 }
 
 const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
-  <div className={`pane-sm sidebar ${sidebarTheme}`}>
-    <nav className="nav-group">
+  <div
+    className={`pane-sm sidebar ${sidebarTheme}`}
+    style={{ display: 'flex', flexDirection: 'column' }}
+  >
+    <nav className="nav-group" style={{ flexGrow: 1 }}>
       <h5 className="nav-group-title" style={{ color: COLORS.PURE_BLACK }}>
         Due date
       </h5>
@@ -69,12 +77,58 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
         />
       ))}
     </nav>
+    {props.currentUser && (
+      <div
+        style={{
+          paddingTop: '0.5rem',
+          borderTop: '1px solid #e1e1e1',
+          background: '#f5f5f5',
+          display: 'flex',
+          flexDirection: 'row',
+          height: '2rem',
+          width: '100%',
+          cursor: 'pointer',
+        }}
+      >
+        {props.userAvatar && (
+          <div
+            style={{
+              height: '2rem',
+              width: '2rem',
+              marginTop: '-0.5rem',
+              cursor: 'pointer',
+            }}
+          >
+            <img
+              style={{ cursor: 'pointer' }}
+              width="100%"
+              height="100%"
+              src={props.userAvatar}
+            />
+          </div>
+        )}
+        <p
+          style={{
+            textAlign: 'center',
+            flexGrow: 1,
+            marginTop: '-0.1rem',
+            marginLeft: '0.5rem',
+            marginRight: '0.5rem',
+            cursor: 'pointer',
+          }}
+        >
+          {props.currentUser.attributes.email}
+        </p>
+      </div>
+    )}
   </div>
 );
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
+  currentUser: state.auth.currentUser,
   selectedDueDate: state.invoice.selectedDueDateCategory,
   countMap: state.invoice.countMap,
+  userAvatar: state.auth.userAvatar,
 });
 
 const mapDispatchToProps = (

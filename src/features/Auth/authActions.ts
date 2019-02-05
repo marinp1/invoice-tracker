@@ -3,10 +3,11 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
 import { Auth } from 'aws-amplify';
 
+import { getUserAvatar } from '../Api/avatar';
+
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
-
-import { v1 as uuidv1 } from 'uuid';
+import { CognitoUser } from '../../types/auth';
 
 export interface LoginSuccess {
   type: 'LOGIN_SUCCESS';
@@ -24,6 +25,11 @@ export interface SignUpSuccess {
 
 export interface SignUpFailure {
   type: 'SIGN_UP_FAILURE';
+}
+
+export interface SetAvatar {
+  type: 'SET_AVATAR';
+  avatar: string;
 }
 
 export interface StartAuthApiCall {
@@ -44,6 +50,7 @@ export type AuthAction =
   | LoginFailure
   | SignUpSuccess
   | SignUpFailure
+  | SetAvatar
   | StartAuthApiCall
   | EndAuthApiCall
   | ChangeAuthState;
@@ -57,10 +64,15 @@ export const getCurrentUser = (): AuthThunkResult<void> => async (
   getState
 ) => {
   try {
-    const user = await Auth.currentAuthenticatedUser();
+    const user: CognitoUser = await Auth.currentAuthenticatedUser();
+    const avatar = await getUserAvatar(user.username);
     dispatch({
       type: 'LOGIN_SUCCESS',
       user: user,
+    });
+    dispatch({
+      type: 'SET_AVATAR',
+      avatar,
     });
   } catch (e) {
     // Do nothing
