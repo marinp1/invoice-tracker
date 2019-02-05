@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import SidePane from './SidePane';
+import SidePanel from './SidePanel.tsx';
 import ListView from './ListView';
 import InvoiceView from './InvoiceView';
 
@@ -30,7 +30,7 @@ class InvoiceScreen extends React.Component<
   render() {
     return (
       <div className="pane-group">
-        <SidePane />
+        <SidePanel />
         <div
           className="pane"
           style={{
