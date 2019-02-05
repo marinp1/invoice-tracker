@@ -27,6 +27,8 @@ export interface Invoice {
   dueDate: string;
   paid: boolean;
   iban: string | null;
+  reference: string | null;
+  message: string | null;
 }
 
 export type OpenInvoice = Invoice & {

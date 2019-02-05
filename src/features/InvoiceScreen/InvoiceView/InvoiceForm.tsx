@@ -5,6 +5,7 @@ import { Field, InjectedFormProps, reduxForm, ConfigProps } from 'redux-form';
 import DatePicker from './DatePicker';
 import ListSelector from './ListSelector';
 import IbanInput from './IbanInput';
+import CurrencyInput from './CurrencyInput';
 import CustomButton from '../../Utils/CustomButton';
 import { ButtonContainer } from './styled';
 
@@ -40,7 +41,6 @@ const renderField: React.SFC<any> = ({
     ) : (
       <Component onChange={input.onChange} className="form-control" />
     )}
-    {console.log(error, touched)}
     {touched &&
       ((error && (
         <span
@@ -58,6 +58,8 @@ const renderField: React.SFC<any> = ({
 export interface InvoiceFormData {
   companyName: string;
   iban: string;
+  reference: string;
+  message: string;
   category: string;
   dueDate: Date;
   amount: number;
@@ -95,6 +97,21 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
           Component={IbanInput}
         />
         <Field
+          name="reference"
+          type="text"
+          pattern="[0-9]"
+          component={renderField}
+          label="Reference number"
+          maxLength={64}
+        />
+        <Field
+          name="message"
+          type="text"
+          component={renderField}
+          label="Message"
+          maxLength={64}
+        />
+        <Field
           name="dueDate"
           component={renderField}
           label="Due date"
@@ -108,9 +125,9 @@ const InvoiceForm: React.SFC<Props> = (props: Props) => {
         />
         <Field
           name="amount"
-          type="number"
           component={renderField}
           label="Amount"
+          Component={CurrencyInput}
         />
         <ButtonContainer>
           <CustomButton type="button" theme="primary" onClick={props.reset}>

@@ -121,13 +121,7 @@ class ListView extends React.Component<
             <ListViewElement
               filterKeyword={this.props.filterString}
               key={invoice.id}
-              id={invoice.id}
-              amount={invoice.amount}
-              category={invoice.category}
-              companyName={invoice.companyName}
-              dueDate={invoice.dueDate}
-              paid={invoice.paid}
-              iban={invoice.iban}
+              {...invoice}
             />
           ))}
       </ul>

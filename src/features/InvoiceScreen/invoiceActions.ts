@@ -85,6 +85,8 @@ export const createInvoice = (): InvoiceThunkResult<void> => async (
     dueDate: '2020-02-16',
     paid: Math.random() > 0.5,
     iban: null,
+    reference: null,
+    message: null,
   };
   dispatch({
     type: 'CREATE_INVOICE',
@@ -107,6 +109,8 @@ export const createTemporaryInvoice = (): InvoiceThunkResult<void> => async (
     unsavedChanges: true,
     name: 'New invoice',
     iban: null,
+    reference: null,
+    message: null,
   };
   dispatch({
     type: 'SELECT_INVOICE',

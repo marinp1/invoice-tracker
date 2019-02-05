@@ -5,6 +5,8 @@ const validate = (values: InvoiceFormData) => {
   const errors: Partial<{
     companyName: string;
     iban: string;
+    reference: string;
+    message: string;
     category: string;
     dueDate: string;
     amount: string;
@@ -19,6 +21,10 @@ const validate = (values: InvoiceFormData) => {
 
   if (values.iban && !IBAN.isValid(values.iban)) {
     errors.iban = 'IBAN should be in valid format';
+  }
+
+  if (values.reference && !/^[0-9]*$/i.test(values.reference)) {
+    errors.reference = 'Reference should contain only numbers';
   }
 
   if (!values.amount) {
