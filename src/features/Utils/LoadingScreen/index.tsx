@@ -21,7 +21,7 @@ const oceanThemes = {
     transform: 'unset',
   },
   reversed: {
-    top: 0,
+    top: '-1.5rem',
     bottom: 'unset',
     transform: 'rotate(180deg)',
   },
