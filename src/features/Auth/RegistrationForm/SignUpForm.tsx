@@ -4,7 +4,7 @@ import { ForgotPasswordDiv } from '../styled';
 import CustomButton from '../../Utils/CustomButton';
 
 import { connect } from 'react-redux';
-import { ConfigProps } from 'redux-form';
+import { ConfigProps, reset } from 'redux-form';
 import { AuthThunkDispatch, signUp } from '../authActions';
 
 import AppState from '../../../types/state';
@@ -141,7 +141,7 @@ const FormComponent: React.SFC<Props> = (props: Props) => {
       </form>
       <ForgotPasswordDiv
         onClick={() => props.changeAuthState('Verify')}
-        disabled={props.submitting}
+        disabled={props.submitting || props.invalid}
       >
         <a>Insert verification code</a>
       </ForgotPasswordDiv>
@@ -169,6 +169,7 @@ function mapDispatchToProps(dispatch: AuthThunkDispatch): DispatchProps {
       props: CustomProps
     ) => {
       dispatch(signUp(formData));
+      dispatch(reset('signup-form'));
     },
   };
 }

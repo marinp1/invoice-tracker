@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { ConfigProps } from 'redux-form';
+import { ConfigProps, reset } from 'redux-form';
 import { AuthThunkDispatch, login } from '../authActions';
 import AppState from '../../../types/state';
 import LoginForm, { LoginFormData, CustomProps } from './FormComponent';
@@ -28,6 +28,7 @@ function mapDispatchToProps(dispatch: AuthThunkDispatch): DispatchProps {
       props: CustomProps
     ) => {
       dispatch(login(formData));
+      dispatch(reset('login-form'));
     },
   };
 }
