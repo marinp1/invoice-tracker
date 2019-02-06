@@ -40,7 +40,7 @@ const generateIndicatorCss = (
   paid: boolean = false
 ) =>
   glamor.css({
-    background: selected ? COLORS.ACCENT_WHITE : 'initial',
+    background: selected ? `${COLORS.ACCENT_WHITE} !important` : 'initial',
     position: 'relative',
     ':before': {
       content: ' ',
@@ -118,7 +118,14 @@ const InvoiceListElement: React.SFC<
         props.paid
       )}`}
       onClick={() => props.onClick(props.id)}
-      style={{ cursor: 'pointer' }}
+      style={{
+        cursor: 'pointer',
+        borderRadius: '0.5rem',
+        margin: '0 0.5rem 0.5rem 0.5rem',
+        background: '#fff',
+        border: '1px solid #e1e1e1',
+        boxShadow: '0 2px 2px 0 rgba(0,0,0,0.05)',
+      }}
     >
       <LargeIcon iconName={categoryToIcon(props.category)} />
       <div className="media-body" style={{ cursor: 'pointer !important' }}>
