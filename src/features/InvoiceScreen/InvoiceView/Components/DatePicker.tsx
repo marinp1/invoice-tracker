@@ -7,7 +7,7 @@ interface Props {
   onChange: (val: any) => void;
   initialValue: Date;
   className: string;
-  value: Date;
+  value: Date | string;
 }
 
 const DatePickerComponent: React.SFC<Props> = props => {
@@ -17,7 +17,12 @@ const DatePickerComponent: React.SFC<Props> = props => {
 
   return (
     <DatePickerContainer className={props.className}>
-      <DatePicker selected={props.value} onChange={handleChange} />
+      <DatePicker
+        selected={
+          props.value instanceof Date ? props.value : new Date(props.value)
+        }
+        onChange={handleChange}
+      />
     </DatePickerContainer>
   );
 };
