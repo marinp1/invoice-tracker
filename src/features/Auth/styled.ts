@@ -21,13 +21,25 @@ export const Container = glamorous.div({
     color: COLORS.PURE_BLACK,
     display: 'flex',
     flexDirection: 'column',
-    '& h1': {
-      fontWeight: 200,
-      textAlign: 'center',
-      letterSpacing: '0.2rem',
-      marginBottom: '2rem',
-    },
   },
+});
+
+export const VersionNumber = glamorous.div({
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  color: '#999',
+  textAlign: 'right',
+  padding: '0.5rem 1rem 0 0',
+});
+
+export const Header = glamorous.div({
+  '& h1': {
+    fontWeight: 200,
+    textAlign: 'center',
+    letterSpacing: '0.2rem',
+  },
+  marginBottom: '2rem',
 });
 
 export const ButtonGroup = glamorous.div({

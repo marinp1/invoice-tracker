@@ -30,7 +30,7 @@ class AWSLogin extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <ButtonGroup>
           <CustomButton
             className={this.state.currentView === 'login' ? 'active' : ''}
@@ -56,7 +56,7 @@ class AWSLogin extends React.Component<Props, State> {
             <RegistrationForm authState={this.props.authState} />
           )}
         </FormContainer>
-      </div>
+      </React.Fragment>
     );
   }
 }

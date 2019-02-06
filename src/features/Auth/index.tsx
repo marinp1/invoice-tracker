@@ -2,15 +2,19 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
 
-import AWSLogin from './AWS';
-
+import Providers from './Providers';
 import LoadingScreen from '../Utils/LoadingScreen';
 
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
 
-import { Container } from './styled';
-import { AuthThunkDispatch, getCurrentUser } from './authActions';
+import { Container, Header, VersionNumber } from './styled';
+import {
+  AuthThunkDispatch,
+  getCurrentUser,
+  changeAuthProvider,
+} from './authActions';
+import { AuthProvider } from '../../types/auth';
 
 const Modal = posed.div({
   enter: {
@@ -34,11 +38,13 @@ interface OwnProps {
 }
 
 interface ReduxStateProps {
+  currentAuthProvider: AuthProvider;
   apiCallInProgress: boolean;
 }
 
 interface ReduxDispatchProps {
   getCurrentUser: () => void;
+  changeAuthProvider: (authProvider: AuthProvider) => void;
 }
 
 type Props = OwnProps & ReduxStateProps & ReduxDispatchProps;
@@ -83,16 +89,37 @@ class LoginScreen extends React.Component<Props, State> {
     return (
       <Container>
         <PoseGroup>
-          {this.state.isVisible && (
-            <Modal key="dialog" className="dialogContainer">
+          {this.state.isVisible && [
+            <Modal
+              key="dialog"
+              className="dialogContainer"
+              style={{ overflow: 'hidden' }}
+            >
               <LoadingScreen
                 visible={this.props.apiCallInProgress}
                 text={this.mapStateToText()}
               />
-              <h1>INVOICE TRACKER</h1>
-              <AWSLogin authState={this.props.authState} />
-            </Modal>
-          )}
+              <VersionNumber>v0.1.0</VersionNumber>
+              <Header>
+                <h1>INVOICE TRACKER</h1>
+                <button
+                  onClick={() =>
+                    this.props.changeAuthProvider(
+                      this.props.currentAuthProvider === 'AWS'
+                        ? 'DROPBOX'
+                        : 'AWS'
+                    )
+                  }
+                >
+                  Change provider
+                </button>
+              </Header>
+              <Providers
+                currentAuthProvider={this.props.currentAuthProvider}
+                authState={this.props.authState}
+              />
+            </Modal>,
+          ]}
         </PoseGroup>
       </Container>
     );
@@ -101,12 +128,15 @@ class LoginScreen extends React.Component<Props, State> {
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
   apiCallInProgress: state.auth.apiCallInProgress,
+  currentAuthProvider: state.auth.authProvider,
 });
 
 const mapDispatchToProps = (
   dispatch: AuthThunkDispatch
 ): ReduxDispatchProps => ({
   getCurrentUser: () => dispatch(getCurrentUser()),
+  changeAuthProvider: (authProvider: AuthProvider) =>
+    dispatch(changeAuthProvider(authProvider)),
 });
 
 export default connect(
