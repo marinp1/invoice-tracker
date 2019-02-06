@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
+import Toggle from 'react-toggle';
+import 'react-toggle/style.css';
 
 import Providers from './Providers';
 import LoadingScreen from '../Utils/LoadingScreen';
@@ -14,6 +16,7 @@ import {
   getCurrentUser,
   changeAuthProvider,
 } from './authActions';
+
 import { AuthProvider } from '../../types/auth';
 
 const Modal = posed.div({
@@ -85,6 +88,12 @@ class LoginScreen extends React.Component<Props, State> {
     this.props.getCurrentUser();
   }
 
+  handleToggleChange = () => {
+    this.props.changeAuthProvider(
+      this.props.currentAuthProvider === 'AWS' ? 'DROPBOX' : 'AWS'
+    );
+  };
+
   render() {
     return (
       <Container>
@@ -102,17 +111,39 @@ class LoginScreen extends React.Component<Props, State> {
               <VersionNumber>v0.1.0</VersionNumber>
               <Header>
                 <h1>INVOICE TRACKER</h1>
-                <button
-                  onClick={() =>
-                    this.props.changeAuthProvider(
-                      this.props.currentAuthProvider === 'AWS'
-                        ? 'DROPBOX'
-                        : 'AWS'
-                    )
-                  }
+                <div
+                  style={{
+                    marginTop: '0.5rem',
+                    height: '2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                 >
-                  Change provider
-                </button>
+                  <span
+                    style={{
+                      marginRight: '0.5rem',
+                      fontWeight:
+                        this.props.currentAuthProvider === 'AWS'
+                          ? 'bold'
+                          : 'initial',
+                    }}
+                  >
+                    AWS
+                  </span>
+                  <Toggle onChange={() => this.handleToggleChange()} />
+                  <span
+                    style={{
+                      marginLeft: '0.5rem',
+                      fontWeight:
+                        this.props.currentAuthProvider === 'DROPBOX'
+                          ? 'bold'
+                          : 'initial',
+                    }}
+                  >
+                    DROPBOX
+                  </span>
+                </div>
               </Header>
               <Providers
                 currentAuthProvider={this.props.currentAuthProvider}

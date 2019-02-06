@@ -39,7 +39,7 @@ export const Header = glamorous.div({
     textAlign: 'center',
     letterSpacing: '0.2rem',
   },
-  marginBottom: '2rem',
+  marginBottom: '1.5rem',
 });
 
 export const ButtonGroup = glamorous.div({
