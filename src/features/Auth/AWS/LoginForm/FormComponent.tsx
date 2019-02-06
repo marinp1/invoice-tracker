@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { ForgotPasswordDiv } from '../styled';
-import CustomButton from '../../Utils/CustomButton';
+import { ForgotPasswordDiv } from '../../styled';
+import CustomButton from '../../../Utils/CustomButton';
 
 export interface CustomProps {}
 

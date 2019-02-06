@@ -2,16 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
 
-import CustomButton from '../Utils/CustomButton';
-
-import LoginForm from './LoginForm';
-import RegistrationForm from './RegistrationForm';
+import AWSLogin from './AWS';
 
 import LoadingScreen from '../Utils/LoadingScreen';
 
 import AppState from '../../types/state';
+import { AuthStateType } from '../../types';
 
-import { Container, ButtonGroup, FormContainer } from './styled';
+import { Container } from './styled';
 import { AuthThunkDispatch, getCurrentUser } from './authActions';
 
 const Modal = posed.div({
@@ -32,7 +30,7 @@ const Modal = posed.div({
 });
 
 interface OwnProps {
-  authState: 'SignUp' | 'Verify' | 'SignIn';
+  authState: AuthStateType;
 }
 
 interface ReduxStateProps {
@@ -46,13 +44,11 @@ interface ReduxDispatchProps {
 type Props = OwnProps & ReduxStateProps & ReduxDispatchProps;
 
 interface State {
-  currentView: 'login' | 'signup';
   isVisible: boolean;
 }
 
 class LoginScreen extends React.Component<Props, State> {
   state: State = {
-    currentView: 'login',
     isVisible: false,
   };
 
@@ -61,13 +57,6 @@ class LoginScreen extends React.Component<Props, State> {
       isVisible: true,
     });
   }
-
-  changeScreen = () => {
-    const nextView = this.state.currentView === 'login' ? 'signup' : 'login';
-    this.setState({
-      currentView: nextView,
-    });
-  };
 
   mapStateToText = () => {
     switch (this.props.authState) {
@@ -79,6 +68,9 @@ class LoginScreen extends React.Component<Props, State> {
       }
       case 'Verify': {
         return 'Verifying...';
+      }
+      case 'Welcome': {
+        return 'Loading...';
       }
     }
   };
@@ -98,37 +90,7 @@ class LoginScreen extends React.Component<Props, State> {
                 text={this.mapStateToText()}
               />
               <h1>INVOICE TRACKER</h1>
-              <ButtonGroup>
-                <CustomButton
-                  className={this.state.currentView === 'login' ? 'active' : ''}
-                  disabled={this.state.currentView === 'login'}
-                  onClick={() => this.changeScreen()}
-                  theme={
-                    this.state.currentView === 'login' ? 'default' : 'primary'
-                  }
-                >
-                  LOGIN
-                </CustomButton>
-                <CustomButton
-                  className={
-                    this.state.currentView === 'signup' ? 'active' : ''
-                  }
-                  disabled={this.state.currentView === 'signup'}
-                  onClick={() => this.changeScreen()}
-                  theme={
-                    this.state.currentView === 'signup' ? 'default' : 'primary'
-                  }
-                >
-                  SIGN UP
-                </CustomButton>
-              </ButtonGroup>
-              <FormContainer>
-                {this.state.currentView === 'login' ? (
-                  <LoginForm />
-                ) : (
-                  <RegistrationForm authState={this.props.authState} />
-                )}
-              </FormContainer>
+              <AWSLogin authState={this.props.authState} />
             </Modal>
           )}
         </PoseGroup>

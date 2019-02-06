@@ -8,6 +8,7 @@ import { getUserAvatar } from '../Api/avatar';
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
 import {
+  AuthProvider,
   User,
   LoginContent,
   SignUpContent,
@@ -41,13 +42,19 @@ export interface ChangeAuthState {
   authState: AuthStateType;
 }
 
+export interface ChangeAuthProvider {
+  type: 'CHANGE_AUTH_PROVIDER';
+  provider: AuthProvider;
+}
+
 export type AuthAction =
   | LoginSuccess
   | SignUpSuccess
   | SetAvatar
   | StartAuthApiCall
   | EndAuthApiCall
-  | ChangeAuthState;
+  | ChangeAuthState
+  | ChangeAuthProvider;
 
 type AuthThunkResult<R> = ThunkAction<R, AppState, undefined, AuthAction>;
 
@@ -168,5 +175,14 @@ export const changeAuthState = (
   dispatch({
     type: 'CHANGE_AUTH_STATE',
     authState,
+  });
+};
+
+export const changeAuthProvider = (
+  provider: AuthProvider
+): AuthThunkResult<void> => (dispatch, getState) => {
+  dispatch({
+    type: 'CHANGE_AUTH_PROVIDER',
+    provider,
   });
 };

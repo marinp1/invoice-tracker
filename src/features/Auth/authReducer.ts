@@ -45,6 +45,11 @@ function appReducer(
         ...state,
         authState: action.authState,
       };
+    case 'CHANGE_AUTH_PROVIDER':
+      return {
+        ...state,
+        authProvider: action.provider,
+      };
     default:
       return state;
   }

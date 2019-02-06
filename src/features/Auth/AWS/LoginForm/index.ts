@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { ConfigProps, reset } from 'redux-form';
-import { AuthThunkDispatch, login } from '../authActions';
-import AppState from '../../../types/state';
+import { AuthThunkDispatch, login } from '../../authActions';
+import AppState from '../../../../types/state';
 import LoginForm, { LoginFormData, CustomProps } from './FormComponent';
 
 const mapStateToProps = (

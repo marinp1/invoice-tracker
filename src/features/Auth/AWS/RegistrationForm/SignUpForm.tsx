@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
-import { ForgotPasswordDiv } from '../styled';
-import CustomButton from '../../Utils/CustomButton';
+import { ForgotPasswordDiv } from '../../styled';
+import CustomButton from '../../../Utils/CustomButton';
 
 import { connect } from 'react-redux';
 import { ConfigProps, reset } from 'redux-form';
-import { AuthThunkDispatch, signUp } from '../authActions';
+import { AuthThunkDispatch, signUp } from '../../authActions';
 
-import AppState from '../../../types/state';
-import { AuthStateType } from '../../../types';
+import AppState from '../../../../types/state';
+import { AuthStateType } from '../../../../types';
 
-import { COLORS } from '../../../styles';
+import { COLORS } from '../../../../styles';
 
 const renderGeneralField: React.SFC<any> = ({
   input,

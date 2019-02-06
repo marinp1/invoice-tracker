@@ -5,8 +5,8 @@ import posed from 'react-pose';
 import SignUpForm from './SignUpForm';
 import VerificationForm from './VerificationForm';
 
-import { AuthThunkDispatch, changeAuthState } from '../authActions';
-import { AuthStateType } from '../../../types';
+import { AuthThunkDispatch, changeAuthState } from '../../authActions';
+import { AuthStateType } from '../../../../types';
 
 const RegistrationDiv = posed.div({
   registration: {
@@ -47,7 +47,7 @@ const VerificationDiv = posed.div({
 });
 
 interface Props {
-  authState: 'SignUp' | 'Verify' | 'SignIn';
+  authState: AuthStateType;
 }
 
 interface DispatchProps {
