@@ -6,6 +6,7 @@ const initialState: AuthState = {
   authState: 'SignIn',
   currentUser: null,
   userAvatar: null,
+  authProvider: 'AWS',
 };
 
 function appReducer(
@@ -38,13 +39,6 @@ function appReducer(
       return {
         ...state,
         authState: 'Verify',
-        currentUser: action.user,
-      };
-    case 'SIGN_UP_FAILURE':
-      return {
-        ...state,
-        currentUser: null,
-        userAvatar: null,
       };
     case 'CHANGE_AUTH_STATE':
       return {

@@ -1,30 +1,26 @@
 import { SignUpSuccess } from './authActions';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
-import { Auth } from 'aws-amplify';
 
+import AuthAPI from '../Api/auth';
 import { getUserAvatar } from '../Api/avatar';
 
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
-import { CognitoUser } from '../../types/auth';
+import {
+  User,
+  LoginContent,
+  SignUpContent,
+  VerificationContent,
+} from '../../types/auth';
 
 export interface LoginSuccess {
   type: 'LOGIN_SUCCESS';
-  user: any;
-}
-
-export interface LoginFailure {
-  type: 'LOGIN_FAILURE';
+  user: User;
 }
 
 export interface SignUpSuccess {
   type: 'SIGN_UP_SUCCESS';
-  user: any;
-}
-
-export interface SignUpFailure {
-  type: 'SIGN_UP_FAILURE';
 }
 
 export interface SetAvatar {
@@ -47,9 +43,7 @@ export interface ChangeAuthState {
 
 export type AuthAction =
   | LoginSuccess
-  | LoginFailure
   | SignUpSuccess
-  | SignUpFailure
   | SetAvatar
   | StartAuthApiCall
   | EndAuthApiCall
@@ -63,17 +57,20 @@ export const getCurrentUser = (): AuthThunkResult<void> => async (
   dispatch,
   getState
 ) => {
+  const authState = getState().auth;
   try {
-    const user: CognitoUser = await Auth.currentAuthenticatedUser();
-    const avatar = await getUserAvatar(user.username);
+    const user: User = await AuthAPI.getCurrentUser(authState.authProvider);
+    const avatar = await getUserAvatar(user.email);
     dispatch({
       type: 'LOGIN_SUCCESS',
       user: user,
     });
+    /*
     dispatch({
       type: 'SET_AVATAR',
       avatar,
     });
+    */
   } catch (e) {
     // Do nothing
   }
@@ -83,34 +80,27 @@ export const signOut = (): AuthThunkResult<void> => async (
   dispatch,
   getState
 ) => {
+  const authState = getState().auth;
   try {
-    await Auth.signOut();
-    window.location.reload();
+    await AuthAPI.signOut(authState.authProvider);
   } catch (e) {
     toast.error('Sign out failed!');
   }
 };
 
-type LoginContent = {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-};
-
-export const login = (data: LoginContent): AuthThunkResult<void> => async (
+export const login = (data?: LoginContent): AuthThunkResult<void> => async (
   dispatch,
   getState
 ) => {
-  if (!getState().auth.apiCallInProgress) {
+  const authState = getState().auth;
+
+  if (!authState.apiCallInProgress) {
     dispatch({
       type: 'START_AUTH_API_CALL',
     });
 
     try {
-      await Auth.signIn({
-        username: data.username,
-        password: data.password,
-      });
+      await AuthAPI.login(authState.authProvider, data);
       getCurrentUser()(dispatch, getState, undefined);
     } catch (e) {
       toast.error(e.message);
@@ -122,34 +112,20 @@ export const login = (data: LoginContent): AuthThunkResult<void> => async (
   }
 };
 
-type SignUpContent = {
-  firstName: string;
-  username: string;
-  emailAddress: string;
-  password: string;
-};
-
-export const signUp = (data: SignUpContent): AuthThunkResult<void> => async (
+export const signUp = (data?: SignUpContent): AuthThunkResult<void> => async (
   dispatch,
   getState
 ) => {
-  if (!getState().auth.apiCallInProgress) {
+  const authState = getState().auth;
+
+  if (!authState.apiCallInProgress) {
     dispatch({
       type: 'START_AUTH_API_CALL',
     });
     try {
-      const result = await Auth.signUp({
-        username: data.username,
-        password: data.password,
-        attributes: {
-          given_name: data.firstName,
-          email: data.emailAddress,
-        },
-        validationData: [],
-      });
+      await AuthAPI.signUp(authState.authProvider, data);
       dispatch({
         type: 'SIGN_UP_SUCCESS',
-        user: result.user,
       });
       toast.success('Sign up successful! Pleast verify your account.');
     } catch (e) {
@@ -162,23 +138,18 @@ export const signUp = (data: SignUpContent): AuthThunkResult<void> => async (
   }
 };
 
-type VerificationContent = {
-  username: string;
-  verificationCode: string;
-};
-
 export const verifyAccount = (
-  data: VerificationContent
+  data?: VerificationContent
 ): AuthThunkResult<void> => async (dispatch, getState) => {
-  if (!getState().auth.apiCallInProgress) {
+  const authState = getState().auth;
+
+  if (!authState.apiCallInProgress) {
     dispatch({
       type: 'START_AUTH_API_CALL',
     });
 
     try {
-      await Auth.confirmSignUp(data.username, data.verificationCode, {
-        forceAliasCreation: true,
-      });
+      await AuthAPI.verifyAccount(authState.authProvider, data);
       changeAuthState('SignIn')(dispatch, getState, undefined);
       toast.success('Verification successful!');
     } catch (e) {

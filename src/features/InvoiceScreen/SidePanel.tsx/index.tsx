@@ -12,7 +12,7 @@ import { signOut } from '../../Auth/authActions';
 import { COLORS } from '../../../styles';
 
 import { DueDateCategory, CountMapType } from '../../../types/invoice';
-import { CognitoUser } from '../../../types/auth';
+import { User } from '../../../types/auth';
 import AppState from '../../../types/state';
 
 const sidebarTheme = glamor.css({
@@ -23,7 +23,7 @@ const sidebarTheme = glamor.css({
 
 interface ReduxStateProps {
   selectedDueDate: DueDateCategory;
-  currentUser: CognitoUser | null;
+  currentUser: User | null;
   userAvatar: string | null;
   countMap: CountMapType;
 }
@@ -68,10 +68,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
           text="Sign out"
           onClick={props.signOut}
         />
-        <MenuItem
-          icon={Icons.faUserAstronaut}
-          text={props.currentUser.attributes.email}
-        />
+        <MenuItem icon={Icons.faUserAstronaut} text={props.currentUser.email} />
       </div>
     )}
   </div>

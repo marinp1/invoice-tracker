@@ -1,5 +1,5 @@
 import { AuthStateType } from './index';
-import { CognitoUser } from './auth';
+import { User, AuthProvider } from './auth';
 
 import {
   Invoice,
@@ -12,8 +12,9 @@ import {
 export interface AuthState {
   apiCallInProgress: boolean;
   authState: AuthStateType;
-  currentUser: CognitoUser | null;
+  currentUser: User | null;
   userAvatar: string | null;
+  authProvider: AuthProvider;
 }
 
 export interface InvoiceState {

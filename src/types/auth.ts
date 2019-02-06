@@ -4,6 +4,14 @@ import {
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 
+export type AuthProvider = 'AWS' | 'DROPBOX';
+
+export interface User {
+  email: string;
+  name?: string;
+  username?: string;
+}
+
 export interface CognitoUser {
   attributes: {
     email: string;
@@ -23,3 +31,21 @@ export interface CognitoUser {
   userDataKey: string;
   username: string;
 }
+
+export type LoginContent = {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+};
+
+export type SignUpContent = {
+  firstName: string;
+  username: string;
+  emailAddress: string;
+  password: string;
+};
+
+export type VerificationContent = {
+  username: string;
+  verificationCode: string;
+};
