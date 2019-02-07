@@ -6,6 +6,7 @@
 	"private": true,
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^1.2.14",
+		"@fortawesome/free-brands-svg-icons": "^5.7.1",
 		"@fortawesome/free-solid-svg-icons": "^5.7.1",
 		"@fortawesome/react-fontawesome": "^0.1.4",
 		"@types/lodash": "^4.14.120",
@@ -33,6 +34,7 @@
 		"react-select": "^2.3.0",
 		"react-toastify": "^4.5.2",
 		"react-toggle": "^4.0.2",
+		"react-toggle-button": "^2.2.0",
 		"redux": "^4.0.1",
 		"redux-form": "^8.1.0",
 		"redux-plainify": "^0.3.1",

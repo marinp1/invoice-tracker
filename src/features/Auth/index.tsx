@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
-import Toggle from 'react-toggle';
-import 'react-toggle/style.css';
 
 import Providers from './Providers';
+import ProviderToggle from './ProviderToggle';
 import LoadingScreen from '../Utils/LoadingScreen';
 
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
 
 import { Container, Header, VersionNumber } from './styled';
+
 import {
   AuthThunkDispatch,
   getCurrentUser,
@@ -111,39 +111,10 @@ class LoginScreen extends React.Component<Props, State> {
               <VersionNumber>v0.1.0</VersionNumber>
               <Header>
                 <h1>INVOICE TRACKER</h1>
-                <div
-                  style={{
-                    marginTop: '0.5rem',
-                    height: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <span
-                    style={{
-                      marginRight: '0.5rem',
-                      fontWeight:
-                        this.props.currentAuthProvider === 'AWS'
-                          ? 'bold'
-                          : 'initial',
-                    }}
-                  >
-                    AWS
-                  </span>
-                  <Toggle onChange={() => this.handleToggleChange()} />
-                  <span
-                    style={{
-                      marginLeft: '0.5rem',
-                      fontWeight:
-                        this.props.currentAuthProvider === 'DROPBOX'
-                          ? 'bold'
-                          : 'initial',
-                    }}
-                  >
-                    DROPBOX
-                  </span>
-                </div>
+                <ProviderToggle
+                  authProvider={this.props.currentAuthProvider}
+                  onToggle={this.handleToggleChange}
+                />
               </Header>
               <Providers
                 currentAuthProvider={this.props.currentAuthProvider}
