@@ -1,4 +1,5 @@
 import { Auth } from 'aws-amplify';
+import DropboxAPI from './dropbox';
 
 import {
   AuthProvider,
@@ -19,6 +20,7 @@ const getCurrentUser = async (provider: AuthProvider): Promise<User> => {
         username: cognitoUser.username,
       });
     case AuthProvider.DROPBOX:
+      DropboxAPI.authenticate();
       return Promise.resolve({
         name: 'Patrk',
         email: 'demo@patrik',

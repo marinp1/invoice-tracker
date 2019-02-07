@@ -1,4 +1,4 @@
-# Invoice Tracker
+# Payminder
 
 An Electron application for keeping track of invoices that are yet to be paid.
 

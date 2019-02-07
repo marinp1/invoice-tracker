@@ -137,7 +137,7 @@ class LoginScreen extends React.Component<Props, State> {
               />
               <VersionNumber>v0.1.0</VersionNumber>
               <Header>
-                <h1>INVOICE TRACKER</h1>
+                <h1>Payminder</h1>
                 <ProviderToggle
                   authProvider={this.props.currentAuthProvider}
                   onToggle={this.handleToggleChange}
