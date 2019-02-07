@@ -47,6 +47,11 @@ export interface ChangeAuthProvider {
   provider: AuthProvider;
 }
 
+export interface GetPreviousSession {
+  type: 'GET_PREVIOUS_SESSION';
+  session: Partial<{ [provider in AuthProvider]: User }>;
+}
+
 export type AuthAction =
   | LoginSuccess
   | SignUpSuccess
@@ -54,32 +59,45 @@ export type AuthAction =
   | StartAuthApiCall
   | EndAuthApiCall
   | ChangeAuthState
-  | ChangeAuthProvider;
+  | ChangeAuthProvider
+  | GetPreviousSession;
 
 type AuthThunkResult<R> = ThunkAction<R, AppState, undefined, AuthAction>;
 
 export type AuthThunkDispatch = ThunkDispatch<AppState, undefined, AuthAction>;
 
-export const getCurrentUser = (): AuthThunkResult<void> => async (
+export const getPreviousSession = (): AuthThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  const sessionPromises = Object.values(AuthProvider).map(
+    async (val: AuthProvider) => {
+      try {
+        return { [val]: await AuthAPI.getCurrentUser(val) };
+      } catch (e) {
+        return {};
+      }
+    }
+  );
+  const result = await Promise.all(sessionPromises);
+  const combined = result.reduce((prev, curr) => ({ ...prev, ...curr }), {});
+  dispatch({
+    type: 'GET_PREVIOUS_SESSION',
+    session: combined,
+  });
+};
+
+export const usePreviousSession = (): AuthThunkResult<void> => async (
   dispatch,
   getState
 ) => {
   const authState = getState().auth;
-  try {
-    const user: User = await AuthAPI.getCurrentUser(authState.authProvider);
-    const avatar = await getUserAvatar(user.email);
+  const user = authState.previousSession[authState.authProvider];
+  if (user) {
     dispatch({
       type: 'LOGIN_SUCCESS',
-      user: user,
+      user,
     });
-    /*
-    dispatch({
-      type: 'SET_AVATAR',
-      avatar,
-    });
-    */
-  } catch (e) {
-    // Do nothing
   }
 };
 
@@ -108,7 +126,11 @@ export const login = (data?: LoginContent): AuthThunkResult<void> => async (
 
     try {
       await AuthAPI.login(authState.authProvider, data);
-      getCurrentUser()(dispatch, getState, undefined);
+      const user = await AuthAPI.getCurrentUser(authState.authProvider);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        user,
+      });
     } catch (e) {
       toast.error(e.message);
     }

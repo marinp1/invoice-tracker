@@ -2,22 +2,34 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import posed, { PoseGroup } from 'react-pose';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as Icons from '@fortawesome/free-solid-svg-icons';
+
 import Providers from './Providers';
 import ProviderToggle from './ProviderToggle';
 import LoadingScreen from '../Utils/LoadingScreen';
 
-import AppState from '../../types/state';
-import { AuthStateType } from '../../types';
-
-import { Container, Header, VersionNumber } from './styled';
-
 import {
   AuthThunkDispatch,
-  getCurrentUser,
+  getPreviousSession,
   changeAuthProvider,
+  usePreviousSession,
 } from './authActions';
 
-import { AuthProvider } from '../../types/auth';
+import {
+  Container,
+  Header,
+  VersionNumber,
+  sessionContainerCss,
+} from './styled';
+
+import AppState from '../../types/state';
+import { AuthStateType } from '../../types';
+import { AuthProvider, User } from '../../types/auth';
+
+import { COLORS } from '../../styles';
+
+const { AWS, DROPBOX } = AuthProvider;
 
 const Modal = posed.div({
   enter: {
@@ -36,17 +48,28 @@ const Modal = posed.div({
   },
 });
 
+const PosedSessionContainer = posed.div({
+  AWS: {
+    background: COLORS.GREEN,
+  },
+  DROPBOX: {
+    background: COLORS.MAIN_BLUE,
+  },
+});
+
 interface OwnProps {
   authState: AuthStateType;
 }
 
 interface ReduxStateProps {
+  previousSession: Partial<{ [provider in AuthProvider]: User }>;
   currentAuthProvider: AuthProvider;
   apiCallInProgress: boolean;
 }
 
 interface ReduxDispatchProps {
-  getCurrentUser: () => void;
+  getPreviousSession: () => void;
+  usePreviousSession: () => void;
   changeAuthProvider: (authProvider: AuthProvider) => void;
 }
 
@@ -85,16 +108,20 @@ class LoginScreen extends React.Component<Props, State> {
   };
 
   componentWillMount() {
-    this.props.getCurrentUser();
+    this.props.getPreviousSession();
   }
 
   handleToggleChange = () => {
     this.props.changeAuthProvider(
-      this.props.currentAuthProvider === 'AWS' ? 'DROPBOX' : 'AWS'
+      this.props.currentAuthProvider === AWS ? DROPBOX : AWS
     );
   };
 
   render() {
+    const currentUser: undefined | User = this.props.previousSession[
+      this.props.currentAuthProvider
+    ];
+
     return (
       <Container>
         <PoseGroup>
@@ -116,6 +143,19 @@ class LoginScreen extends React.Component<Props, State> {
                   onToggle={this.handleToggleChange}
                 />
               </Header>
+              {currentUser && (
+                <PosedSessionContainer
+                  pose={this.props.currentAuthProvider}
+                  className={`${sessionContainerCss}`}
+                  onClick={() => this.props.usePreviousSession()}
+                >
+                  Continue as <strong>{currentUser.email}</strong>
+                  <FontAwesomeIcon
+                    icon={Icons.faSignInAlt}
+                    style={{ marginLeft: '0.3rem' }}
+                  />
+                </PosedSessionContainer>
+              )}
               <Providers
                 currentAuthProvider={this.props.currentAuthProvider}
                 authState={this.props.authState}
@@ -129,6 +169,7 @@ class LoginScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: AppState): ReduxStateProps => ({
+  previousSession: state.auth.previousSession,
   apiCallInProgress: state.auth.apiCallInProgress,
   currentAuthProvider: state.auth.authProvider,
 });
@@ -136,7 +177,8 @@ const mapStateToProps = (state: AppState): ReduxStateProps => ({
 const mapDispatchToProps = (
   dispatch: AuthThunkDispatch
 ): ReduxDispatchProps => ({
-  getCurrentUser: () => dispatch(getCurrentUser()),
+  getPreviousSession: () => dispatch(getPreviousSession()),
+  usePreviousSession: () => dispatch(usePreviousSession()),
   changeAuthProvider: (authProvider: AuthProvider) =>
     dispatch(changeAuthProvider(authProvider)),
 });

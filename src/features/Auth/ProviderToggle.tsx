@@ -22,47 +22,53 @@ const ProviderToggle: React.SFC<Props> = props => (
       justifyContent: 'center',
     }}
   >
-    <ToggleButton
-      inactiveLabel={''}
-      activeLabel={''}
-      trackStyle={{
-        height: '1rem',
-        background: COLORS.MAIN_BLACK,
-      }}
-      thumbStyle={{
-        width: '32px',
-        height: '32px',
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-      colors={{
-        activeThumb: {
-          base: COLORS.MAIN_BLUE,
-        },
-        inactiveThumb: {
-          base: COLORS.GREEN,
-        },
-      }}
-      thumbAnimateRange={[-6, 28]}
-      thumbIcon={
-        props.authProvider === 'AWS' ? (
-          <FontAwesomeIcon
-            icon={faAws}
-            size="lg"
-            style={{ color: COLORS.PURE_WHITE }}
-          />
-        ) : (
-          <FontAwesomeIcon
-            icon={faDropbox}
-            size="lg"
-            style={{ color: COLORS.PURE_WHITE }}
-          />
-        )
-      }
-      value={props.authProvider !== 'AWS'}
-      onToggle={props.onToggle}
-    />
+    <div style={{ cursor: 'pointer' }}>
+      <ToggleButton
+        inactiveLabel={''}
+        activeLabel={''}
+        trackStyle={{
+          height: '1rem',
+          background: COLORS.MAIN_BLACK,
+          cursor: 'pointer',
+        }}
+        thumbStyle={{
+          width: '32px',
+          height: '32px',
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          cursor: 'pointer',
+        }}
+        colors={{
+          activeThumb: {
+            base: COLORS.MAIN_BLUE,
+            hover: COLORS.DARK_BLUE,
+          },
+          inactiveThumb: {
+            base: COLORS.GREEN,
+            hover: '#00b746',
+          },
+        }}
+        thumbAnimateRange={[-6, 28]}
+        thumbIcon={
+          props.authProvider === AuthProvider.AWS ? (
+            <FontAwesomeIcon
+              icon={faAws}
+              size="lg"
+              style={{ color: COLORS.PURE_WHITE, cursor: 'pointer' }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faDropbox}
+              size="lg"
+              style={{ color: COLORS.PURE_WHITE, cursor: 'pointer' }}
+            />
+          )
+        }
+        value={props.authProvider !== AuthProvider.AWS}
+        onToggle={props.onToggle}
+      />
+    </div>
   </div>
 );
 

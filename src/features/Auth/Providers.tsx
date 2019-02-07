@@ -1,5 +1,5 @@
 import * as React from 'react';
-import posed, { PoseGroup } from 'react-pose';
+import posed from 'react-pose';
 
 import AWSLogin from './AWS';
 
@@ -56,7 +56,11 @@ class Providers extends React.Component<Props> {
         <AWSProviderContainer
           style={{ minWidth: '100%' }}
           key="aws-login"
-          pose={this.state.selectedProvider === 'AWS' ? 'visible' : 'hidden'}
+          pose={
+            this.state.selectedProvider === AuthProvider.AWS
+              ? 'visible'
+              : 'hidden'
+          }
         >
           <AWSLogin authState={this.props.authState} />
         </AWSProviderContainer>
@@ -64,7 +68,9 @@ class Providers extends React.Component<Props> {
           key="dropbox-login"
           style={{ minWidth: '100%' }}
           pose={
-            this.state.selectedProvider === 'DROPBOX' ? 'visible' : 'hidden'
+            this.state.selectedProvider === AuthProvider.DROPBOX
+              ? 'visible'
+              : 'hidden'
           }
         >
           <AWSLogin authState={this.props.authState} />

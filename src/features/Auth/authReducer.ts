@@ -1,12 +1,14 @@
 import { AuthState } from '../../types/state';
 import { AuthAction } from './authActions';
+import { AuthProvider } from '../../types/auth';
 
 const initialState: AuthState = {
   apiCallInProgress: false,
   authState: 'SignIn',
   currentUser: null,
+  previousSession: {},
   userAvatar: null,
-  authProvider: 'AWS',
+  authProvider: AuthProvider.AWS,
 };
 
 function appReducer(
@@ -29,6 +31,7 @@ function appReducer(
         ...state,
         authState: 'Welcome',
         currentUser: action.user,
+        previousSession: {},
       };
     case 'SET_AVATAR':
       return {
@@ -49,6 +52,11 @@ function appReducer(
       return {
         ...state,
         authProvider: action.provider,
+      };
+    case 'GET_PREVIOUS_SESSION':
+      return {
+        ...state,
+        previousSession: action.session,
       };
     default:
       return state;

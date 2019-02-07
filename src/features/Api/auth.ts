@@ -11,14 +11,14 @@ import {
 
 const getCurrentUser = async (provider: AuthProvider): Promise<User> => {
   switch (provider) {
-    case 'AWS':
+    case AuthProvider.AWS:
       const cognitoUser: CognitoUser = await Auth.currentAuthenticatedUser();
       return Promise.resolve({
         name: cognitoUser.attributes.given_name,
         email: cognitoUser.attributes.email,
         username: cognitoUser.username,
       });
-    case 'DROPBOX':
+    case AuthProvider.DROPBOX:
       return Promise.resolve({
         name: 'Patrk',
         email: 'demo@patrik',
@@ -31,14 +31,14 @@ const login = async (
   data?: LoginContent
 ): Promise<boolean> => {
   switch (provider) {
-    case 'AWS':
+    case AuthProvider.AWS:
       const loginData = data as LoginContent;
       await Auth.signIn({
         username: loginData.username,
         password: loginData.password,
       });
       return Promise.resolve(true);
-    case 'DROPBOX':
+    case AuthProvider.DROPBOX:
       return Promise.resolve(true);
   }
 };
@@ -48,7 +48,7 @@ const signUp = async (
   data?: SignUpContent
 ): Promise<boolean> => {
   switch (provider) {
-    case 'AWS':
+    case AuthProvider.AWS:
       const signUpData = data as SignUpContent;
       await Auth.signUp({
         username: signUpData.username,
@@ -60,17 +60,17 @@ const signUp = async (
         validationData: [],
       });
       return Promise.resolve(true);
-    case 'DROPBOX':
+    case AuthProvider.DROPBOX:
       return Promise.resolve(true);
   }
 };
 
 const signOut = async (provider: AuthProvider): Promise<void> => {
   switch (provider) {
-    case 'AWS':
+    case AuthProvider.AWS:
       await Auth.signOut();
       return Promise.resolve(window.location.reload());
-    case 'DROPBOX':
+    case AuthProvider.DROPBOX:
       return Promise.resolve(window.location.reload());
   }
 };
@@ -80,7 +80,7 @@ const verifyAccount = async (
   data?: VerificationContent
 ): Promise<boolean> => {
   switch (provider) {
-    case 'AWS':
+    case AuthProvider.AWS:
       const verificatonData = data as VerificationContent;
       await Auth.confirmSignUp(
         verificatonData.username,
@@ -90,7 +90,7 @@ const verifyAccount = async (
         }
       );
       return Promise.resolve(true);
-    case 'DROPBOX':
+    case AuthProvider.DROPBOX:
       return Promise.resolve(true);
   }
 };

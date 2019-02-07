@@ -4,7 +4,10 @@ import {
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 
-export type AuthProvider = 'AWS' | 'DROPBOX';
+export enum AuthProvider {
+  AWS = 'AWS',
+  DROPBOX = 'DROPBOX',
+}
 
 export interface User {
   email: string;

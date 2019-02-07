@@ -13,6 +13,7 @@ export interface AuthState {
   apiCallInProgress: boolean;
   authState: AuthStateType;
   currentUser: User | null;
+  previousSession: Partial<{ [provider in AuthProvider]: User }>;
   userAvatar: string | null;
   authProvider: AuthProvider;
 }

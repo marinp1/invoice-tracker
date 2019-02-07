@@ -1,5 +1,6 @@
 import { COLORS } from '../../styles';
 import glamorous from 'glamorous';
+import * as glamor from 'glamor';
 
 export const Container = glamorous.div({
   top: 0,
@@ -97,5 +98,21 @@ export const ForgotPasswordDiv = glamorous.div({
   textAlign: 'center',
   '& a': {
     color: COLORS.MAIN_BLACK,
+  },
+});
+
+export const sessionContainerCss = glamor.css({
+  width: '100%',
+  color: COLORS.PURE_WHITE,
+  padding: '0.5rem 1rem',
+  textAlign: 'center',
+  marginBottom: '1.5rem',
+  borderRadius: '0.2rem',
+  cursor: 'pointer',
+  ':hover': {
+    filter: 'brightness(90%)',
+  },
+  ':active': {
+    filter: 'brightness(85%)',
   },
 });
