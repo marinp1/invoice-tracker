@@ -6,6 +6,7 @@ const {
   Menu,
   TouchBar,
   Tray,
+  session,
 } = require('electron');
 
 const {
@@ -66,6 +67,7 @@ const createWindow = () => {
   }
 
   mainWindow.once('ready-to-show', () => {
+
     mainWindow.show();
 
     ipcMain.on('open-external-window', (event, arg) => {
@@ -202,10 +204,36 @@ const generateTray = () => {
   tray.setContextMenu(contextMenu)
 }
 
-app.on('ready', () => {
-  createWindow();
-  generateMenu();
-  generateTray();
+app.on('ready', async () => {
+  await createWindow();
+  await generateMenu();
+  await generateTray();
+
+  const filter = {
+    urls: ['https://patrikmarin.fi/placeholder-callback*']
+  };
+
+  session.defaultSession.webRequest.onBeforeRequest(filter, function (details, callback) {
+    callback({
+      cancel: true
+    });
+
+    let end = '';
+
+    try {
+      end = details.url.substr(details.url.indexOf('#'));
+    } catch {
+      end = '#access_token=OAUTH_FAILED'
+    } finally {
+      mainWindow.loadURL(
+        isDev ?
+        `http://localhost:3000${end}` :
+        `file://${path.join(__dirname, '../build/index.html')}${end}`,
+      );
+    }
+
+  })
+
 });
 
 app.on('window-all-closed', () => {

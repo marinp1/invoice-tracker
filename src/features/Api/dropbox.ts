@@ -4,8 +4,9 @@ const CLIENT_ID = 'aj7dxmh2wlso1ok';
 const Dropbox = new DropboxAPI({ clientId: CLIENT_ID });
 
 const authenticate = () => {
-  const URL = Dropbox.getAuthenticationUrl(window.location.href);
-  console.log(URL);
+  const CALLBACK_URL = 'https://patrikmarin.fi/placeholder-callback';
+  const URL = Dropbox.getAuthenticationUrl(CALLBACK_URL);
+  window.location.href = URL;
 };
 
 export default {

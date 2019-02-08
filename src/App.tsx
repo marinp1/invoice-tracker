@@ -17,6 +17,10 @@ interface Props {
 }
 
 class App extends React.Component<Props> {
+  componentDidMount() {
+    console.log(window.location.href);
+  }
+
   render() {
     return (
       <div className="window">

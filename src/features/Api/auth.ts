@@ -20,7 +20,6 @@ const getCurrentUser = async (provider: AuthProvider): Promise<User> => {
         username: cognitoUser.username,
       });
     case AuthProvider.DROPBOX:
-      DropboxAPI.authenticate();
       return Promise.resolve({
         name: 'Patrk',
         email: 'demo@patrik',
@@ -41,6 +40,7 @@ const login = async (
       });
       return Promise.resolve(true);
     case AuthProvider.DROPBOX:
+      await DropboxAPI.authenticate();
       return Promise.resolve(true);
   }
 };
