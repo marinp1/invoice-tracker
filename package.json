@@ -1,6 +1,8 @@
 {
-	"name": "invoice-tracker",
+	"name": "payminder",
 	"version": "0.1.0",
+	"author": "Patrik Marin",
+	"description": "Electron application to help people to track bills",
 	"homepage": "./",
 	"main": "public/electron.js",
 	"private": true,
@@ -86,7 +88,7 @@
 		"wait-on": "^3.2.0"
 	},
 	"build": {
-		"appId": "fi.patrikmarin",
+		"appId": "fi.patrikmarin.payminder",
 		"compression": "normal",
 		"productName": "Payminder",
 		"directories": {
@@ -106,7 +108,7 @@
 				"bucket": "invoice-tracker-releases",
 				"path": "releases"
 			},
-			"category": "public.app-category.news"
+			"category": "public.app-category.productivity"
 		},
 		"mas": {
 			"entitlements": "assets/entitlements.mas.plist",
