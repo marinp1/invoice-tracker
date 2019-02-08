@@ -28,6 +28,10 @@ export interface InvoiceState {
   selectedInvoiceId: string | null;
   selectedKeyword: string;
   countMap: CountMapType;
+  history: {
+    invoiceHistory: Partial<InvoiceState>[];
+    invoiceFuture: Partial<InvoiceState>[];
+  };
 }
 
 interface AppState {

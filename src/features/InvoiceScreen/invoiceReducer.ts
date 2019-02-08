@@ -14,6 +14,10 @@ const initialState: InvoiceState = {
   selectedInvoiceId: null,
   selectedKeyword: '',
   countMap: {},
+  history: {
+    invoiceHistory: [],
+    invoiceFuture: [],
+  },
 };
 
 function appReducer(
@@ -74,6 +78,24 @@ function appReducer(
         )[0]
           ? state.openInvoices.filter(inv => inv.id !== action.invoiceId)[0].id
           : null,
+      };
+    case 'SAVE_HISTORY_ACTION':
+      return {
+        ...state,
+        history: {
+          invoiceHistory: [...state.history.invoiceHistory, action.state],
+          invoiceFuture: [{}],
+        },
+      };
+    case 'UNDO_ACTION':
+      return {
+        ...state,
+        ...action.state,
+      };
+    case 'REDO_ACTION':
+      return {
+        ...state,
+        ...action.state,
       };
     default:
       return state;

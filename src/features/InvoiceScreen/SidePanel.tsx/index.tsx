@@ -6,7 +6,12 @@ import * as Icons from '@fortawesome/free-solid-svg-icons';
 import NavItem from './NavItem';
 import MenuItem from './MenuItem';
 
-import { InvoiceThunkDispatch, selectDueDateCategory } from '../invoiceActions';
+import {
+  InvoiceThunkDispatch,
+  selectDueDateCategory,
+  undoAction,
+  redoAction,
+} from '../invoiceActions';
 import { signOut } from '../../Auth/authActions';
 
 import { COLORS } from '../../../styles';
@@ -30,6 +35,8 @@ interface ReduxStateProps {
 
 interface ReduxDispatchProps {
   changeDueDateSelection: (sel: DueDateCategory) => void;
+  undoAction: () => void;
+  redoAction: () => void;
   signOut: () => void;
 }
 
@@ -39,7 +46,11 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
     style={{ display: 'flex', flexDirection: 'column' }}
   >
     <nav className="nav-group" style={{ flexGrow: 1 }}>
-      <h5 className="nav-group-title" style={{ color: COLORS.PURE_BLACK }}>
+      <h5
+        className="nav-group-title"
+        style={{ color: COLORS.PURE_BLACK }}
+        onClick={() => props.undoAction()}
+      >
         Filters
       </h5>
       {Object.values(DueDateCategory).map((cat: DueDateCategory) => (
@@ -61,6 +72,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
           cursor: 'pointer',
           overflow: 'hidden',
         }}
+        onClick={() => props.redoAction()}
       >
         <MenuItem icon={Icons.faInfo} text="About" subtext="v0.1.0" />
         <MenuItem
@@ -89,6 +101,12 @@ const mapDispatchToProps = (
   },
   signOut: () => {
     dispatch(signOut());
+  },
+  undoAction: () => {
+    dispatch(undoAction());
+  },
+  redoAction: () => {
+    dispatch(redoAction());
   },
 });
 

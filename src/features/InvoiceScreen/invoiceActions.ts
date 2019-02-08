@@ -1,7 +1,7 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
-import AppState from '../../types/state';
+import AppState, { InvoiceState } from '../../types/state';
 
 import API from '../Api';
 
@@ -69,6 +69,21 @@ export interface FilterInvoicesByKeyword {
   keyword: string;
 }
 
+export interface SaveHistoryAction {
+  type: 'SAVE_HISTORY_ACTION';
+  state: Partial<InvoiceState>;
+}
+
+export interface UndoAction {
+  type: 'UNDO_ACTION';
+  state: Partial<InvoiceState>;
+}
+
+export interface RedoAction {
+  type: 'REDO_ACTION';
+  state: Partial<InvoiceState>;
+}
+
 export type InvoiceAction =
   | StartApiCall
   | EndApiCall
@@ -80,7 +95,10 @@ export type InvoiceAction =
   | SelectInvoice
   | UnselectInvoice
   | SelectDueDateCategory
-  | FilterInvoicesByKeyword;
+  | FilterInvoicesByKeyword
+  | SaveHistoryAction
+  | UndoAction
+  | RedoAction;
 
 type InvoiceThunkResult<R> = ThunkAction<R, AppState, undefined, InvoiceAction>;
 
@@ -101,6 +119,93 @@ interface InvoiceFormData {
   amount: number;
   paid: boolean;
 }
+
+const diff = (obj1: any, obj2: any) =>
+  _.reduce(
+    obj1,
+    (result: any, value, key) => {
+      if (_.isPlainObject(value)) {
+        if (key === 'countMap') {
+          result[key] = { ...value, ...diff(value, obj2[key]) };
+        } else if (key === 'history' || key === 'apiCallsInProgress') {
+          // Do nothing
+        } else {
+          result[key] = diff(value, obj2[key]);
+        }
+      } else if (!_.isEqual(value, obj2[key])) {
+        result[key] = value;
+      }
+      return result;
+    },
+    {}
+  );
+
+export const undoAction = (): InvoiceThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  const invoiceState = getState().invoice;
+
+  if (invoiceState.history.invoiceHistory.length > 0) {
+    const invoiceHistory = [...invoiceState.history.invoiceHistory];
+    const previousHistory = invoiceHistory.pop() as Partial<InvoiceState>;
+    let newState = { ...invoiceState, ...previousHistory };
+
+    const MODIFIED = diff(invoiceState, newState);
+
+    newState = {
+      ...newState,
+      history: {
+        invoiceHistory,
+        invoiceFuture: [...invoiceState.history.invoiceFuture, MODIFIED],
+      },
+    };
+
+    dispatch({
+      type: 'UNDO_ACTION',
+      state: newState,
+    });
+  }
+};
+
+export const redoAction = (): InvoiceThunkResult<void> => async (
+  dispatch,
+  getState
+) => {
+  const invoiceState = getState().invoice;
+
+  if (invoiceState.history.invoiceFuture.length > 0) {
+    const invoiceFuture = [...invoiceState.history.invoiceFuture];
+    const previousFuture = invoiceFuture.pop() as Partial<InvoiceState>;
+    let newState = { ...invoiceState, ...previousFuture };
+
+    const MODIFIED = diff(invoiceState, newState);
+
+    newState = {
+      ...newState,
+      history: {
+        invoiceHistory: [...invoiceState.history.invoiceHistory, MODIFIED],
+        invoiceFuture,
+      },
+    };
+
+    dispatch({
+      type: 'REDO_ACTION',
+      state: newState,
+    });
+  }
+};
+
+export const saveHistoryAction = (
+  previousState: InvoiceState
+): InvoiceThunkResult<void> => async (dispatch, getState) => {
+  const currentState = getState().invoice;
+  const DELETED = diff(previousState, currentState);
+  dispatch({
+    type: 'SAVE_HISTORY_ACTION',
+    state: DELETED,
+  });
+};
 
 export const getInvoices = (): InvoiceThunkResult<void> => async (
   dispatch,
@@ -171,6 +276,7 @@ export const createInvoice = (
           type: 'END_API_CALL',
         });
         await getInvoices()(dispatch, getState, undefined);
+        await saveHistoryAction(state.invoice)(dispatch, getState, undefined);
         toast.success('Invoice created!');
       } else {
         await API.saveInvoice(invoice);
@@ -178,6 +284,7 @@ export const createInvoice = (
           type: 'END_API_CALL',
         });
         await getInvoices()(dispatch, getState, undefined);
+        await saveHistoryAction(state.invoice)(dispatch, getState, undefined);
         toast.info('Invoice saved!');
       }
       unselectInvoice(data.id)(dispatch, getState, undefined);
