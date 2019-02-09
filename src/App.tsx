@@ -7,6 +7,7 @@ Amplify.configure(awsConfig);
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Header from './features/Header';
 import LoginScreen from './features/Auth';
 import InvoiceScreen from './features/InvoiceScreen';
 import AppState from './types/state';
@@ -21,6 +22,7 @@ class App extends React.Component<Props> {
     return (
       <div className="window">
         <ToastContainer />
+        <Header />
         <div className="window-content">
           {this.props.authState !== 'Welcome' ? (
             <LoginScreen authState={this.props.authState} />

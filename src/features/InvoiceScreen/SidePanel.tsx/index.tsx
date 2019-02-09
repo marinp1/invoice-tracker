@@ -1,6 +1,8 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
 import { connect } from 'react-redux';
-import * as glamor from 'glamor';
+import { jsx } from '@emotion/core';
+import css from '@emotion/css/macro';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 
 import NavItem from './NavItem';
@@ -20,10 +22,19 @@ import { DueDateCategory, CountMapType } from '../../../types/invoice';
 import { User } from '../../../types/auth';
 import AppState from '../../../types/state';
 
-const sidebarTheme = glamor.css({
+const sidebarTheme = css({
   background: COLORS.ACCENT_WHITE,
   color: COLORS.PURE_BLACK,
-  paddingTop: '1.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const menuContainerStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  cursor: 'pointer',
+  overflow: 'hidden',
 });
 
 interface ReduxStateProps {
@@ -41,10 +52,7 @@ interface ReduxDispatchProps {
 }
 
 const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
-  <div
-    className={`pane-sm sidebar ${sidebarTheme}`}
-    style={{ display: 'flex', flexDirection: 'column' }}
-  >
+  <div className="pane-sm sidebar" css={sidebarTheme}>
     <nav className="nav-group" style={{ flexGrow: 1 }}>
       <h5
         className="nav-group-title"
@@ -64,16 +72,7 @@ const SidePane: React.SFC<ReduxStateProps & ReduxDispatchProps> = props => (
       ))}
     </nav>
     {props.currentUser && (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          cursor: 'pointer',
-          overflow: 'hidden',
-        }}
-        onClick={() => props.redoAction()}
-      >
+      <div css={menuContainerStyle} onClick={() => props.redoAction()}>
         <MenuItem icon={Icons.faInfo} text="About" subtext="v0.1.0" />
         <MenuItem
           icon={Icons.faSignOutAlt}
