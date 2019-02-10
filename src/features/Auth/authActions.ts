@@ -3,7 +3,10 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { toast } from 'react-toastify';
 
 import AuthAPI from '../Api/auth';
+import Api from '../Api/index';
 import { getUserAvatar } from '../Api/avatar';
+import Crypto from '../Api/aes';
+import nodeCrypto from 'crypto';
 
 import AppState from '../../types/state';
 import { AuthStateType } from '../../types';
@@ -93,11 +96,25 @@ export const usePreviousSession = (): AuthThunkResult<void> => async (
 ) => {
   const authState = getState().auth;
   const user = authState.previousSession[authState.authProvider];
-  if (user) {
-    dispatch({
-      type: 'LOGIN_SUCCESS',
-      user,
-    });
+
+  const hashedPassword = localStorage.getItem('hashedPassword');
+  if (!hashedPassword) {
+    signOut()(dispatch, getState, undefined);
+  } else {
+    if (user) {
+      const salt = nodeCrypto
+        .createHash('sha256')
+        .update(user.email + authState.authProvider)
+        .digest('hex');
+
+      Crypto.initialise(hashedPassword, salt);
+      Api.initDatabase();
+
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        user,
+      });
+    }
   }
 };
 
@@ -107,6 +124,7 @@ export const signOut = (): AuthThunkResult<void> => async (
 ) => {
   const authState = getState().auth;
   try {
+    localStorage.removeItem('hashedPassword');
     await AuthAPI.signOut(authState.authProvider);
   } catch (e) {
     toast.error('Sign out failed!');
@@ -127,6 +145,22 @@ export const login = (data?: LoginContent): AuthThunkResult<void> => async (
     try {
       await AuthAPI.login(authState.authProvider, data);
       const user = await AuthAPI.getCurrentUser(authState.authProvider);
+
+      const hashedPassword = nodeCrypto
+        .createHash('sha256')
+        .update((data as LoginContent).password)
+        .digest('hex');
+
+      localStorage.setItem('hashedPassword', hashedPassword);
+
+      const salt = nodeCrypto
+        .createHash('sha256')
+        .update(user.email + authState.authProvider)
+        .digest('hex');
+
+      Crypto.initialise(hashedPassword, salt);
+      Api.initDatabase();
+
       dispatch({
         type: 'LOGIN_SUCCESS',
         user,

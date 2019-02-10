@@ -1,6 +1,7 @@
 // Temporary api mockup
 import _ from 'lodash';
 import * as LZString from 'lz-string';
+import Crypto from './aes';
 
 import {
   Invoice,
@@ -24,17 +25,23 @@ const DemoInvoice = {
   paid: false,
 };
 
-let data: string = LZString.compressToUTF16(JSON.stringify([DemoInvoice]));
+let data: string = '';
 
 const fetchInvoices = (): Invoice[] =>
-  JSON.parse(LZString.decompressFromUTF16(data));
+  JSON.parse(LZString.decompressFromUTF16(Crypto.decrypt(data)));
 
 const updateInvoices = (invoices: Object): void => {
-  data = LZString.compressToUTF16(JSON.stringify(invoices));
+  data = Crypto.encrypt(LZString.compressToUTF16(JSON.stringify(invoices)));
 };
 
 const wait = async (ms: number = 500) =>
   new Promise(resolve => setTimeout(() => resolve(true), ms));
+
+const initDatabase = () => {
+  data = Crypto.encrypt(
+    LZString.compressToUTF16(JSON.stringify([DemoInvoice]))
+  );
+};
 
 const getInvoices = async (params: FilterParameters) => {
   const invoices = fetchInvoices();
@@ -81,6 +88,7 @@ const saveInvoice = async (invoice: Invoice) => {
 };
 
 export default {
+  initDatabase,
   getInvoices,
   createInvoice,
   saveInvoice,
