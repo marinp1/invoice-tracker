@@ -1,4 +1,6 @@
+/** @jsx jsx */
 import React from 'react';
+import { jsx } from '@emotion/core';
 import Select from 'react-select';
 import { Category } from '../../../../types/invoice';
 import { GroupType } from 'react-select/lib/types';

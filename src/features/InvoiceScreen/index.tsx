@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import { connect } from 'react-redux';
 
 import SidePanel from './SidePanel.tsx';

@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import { connect } from 'react-redux';
 import posed from 'react-pose';
 import _ from 'lodash';

@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { DatePickerContainer } from '../styled';

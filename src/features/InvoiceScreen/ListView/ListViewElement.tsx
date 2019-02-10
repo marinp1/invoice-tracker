@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import posed from 'react-pose';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';

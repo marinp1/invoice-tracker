@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 import { ForgotPasswordDiv } from '../../styled';
 import CustomButton from '../../../Utils/CustomButton';

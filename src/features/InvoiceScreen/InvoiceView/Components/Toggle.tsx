@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 import { COLORS } from '../../../../styles';

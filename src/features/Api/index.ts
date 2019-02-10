@@ -1,4 +1,6 @@
 // Temporary api mockup
+import _ from 'lodash';
+import * as LZString from 'lz-string';
 
 import {
   Invoice,
@@ -10,24 +12,33 @@ import {
 
 import { filterInvoices } from '../../utils';
 
-let invoices: Invoice[] = [
-  {
-    id: 'demo',
-    amount: 4000,
-    dueDate: '2019-02-20',
-    reference: '213123',
-    companyName: 'Soccer',
-    iban: '',
-    message: null,
-    category: Category.Soccer,
-    paid: false,
-  },
-];
+const DemoInvoice = {
+  id: 'demo',
+  amount: 4000,
+  dueDate: '2019-02-20',
+  reference: '213123',
+  companyName: 'Soccer',
+  iban: '',
+  message: null,
+  category: Category.Soccer,
+  paid: false,
+};
+
+let data: string = LZString.compressToUTF16(JSON.stringify([DemoInvoice]));
+
+const fetchInvoices = (): Invoice[] =>
+  JSON.parse(LZString.decompressFromUTF16(data));
+
+const updateInvoices = (invoices: Object): void => {
+  data = LZString.compressToUTF16(JSON.stringify(invoices));
+};
 
 const wait = async (ms: number = 500) =>
   new Promise(resolve => setTimeout(() => resolve(true), ms));
 
 const getInvoices = async (params: FilterParameters) => {
+  const invoices = fetchInvoices();
+
   const filterInvoicesByKeyword = (invoice: Invoice) => {
     if (params.filterString.trim().length === 0) return true;
     return (
@@ -57,12 +68,15 @@ const getInvoices = async (params: FilterParameters) => {
 const createInvoice = async (invoice: Invoice) => {
   if (invoice.amount < 1)
     throw new Error('Invoice amount should be at least 0,01 €');
-  invoices.push(invoice);
+  const invoices = fetchInvoices();
+  updateInvoices([...invoices, invoice]);
   await wait();
 };
 
 const saveInvoice = async (invoice: Invoice) => {
+  let invoices = fetchInvoices();
   invoices = invoices.filter(inv => inv.id !== invoice.id).concat(invoice);
+  updateInvoices(invoices);
   await wait();
 };
 

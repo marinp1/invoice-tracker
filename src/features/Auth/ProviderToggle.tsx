@@ -1,4 +1,7 @@
-import * as React from 'react';
+/** @jsx jsx */
+import React from 'react';
+import { jsx } from '@emotion/core';
+import css from '@emotion/css/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDropbox, faAws } from '@fortawesome/free-brands-svg-icons';
 import ToggleButton from 'react-toggle-button';
@@ -12,16 +15,16 @@ interface Props {
   onToggle: () => void;
 }
 
+const providerCss = css({
+  marginTop: '0.5rem',
+  height: '2rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
 const ProviderToggle: React.SFC<Props> = props => (
-  <div
-    style={{
-      marginTop: '0.5rem',
-      height: '2rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}
-  >
+  <div css={providerCss}>
     <div style={{ cursor: 'pointer' }}>
       <ToggleButton
         inactiveLabel={''}
